@@ -7,12 +7,7 @@ namespace Assignments
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World bb!");
-
             Test.runTest();
-
-
-
         }
     }
 }
