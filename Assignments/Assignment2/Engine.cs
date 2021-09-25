@@ -6,14 +6,15 @@
     private fuelTypes fuelType;
     private int fuelLevel;
 
-    public Engine(fuelTypes fuelType)
+    public Engine(string model)
     {
         this.running = false;
         this.speed = 0;
         this.oilLevel = 100;
-        this.fuelType = fuelType;
-        fuelLevel = 100;
+        this.fuelLevel = 100;
+        this.fuelType = selectFuelType(model);
     }
+
     public int getFuelLevel() => fuelLevel;
     public int increaseFuel(int delta) => ((fuelLevel += delta) > 100) ? fuelLevel += delta : fuelLevel = 100;
 
@@ -35,6 +36,18 @@
             return oilStatus.Insufficient;
         }
 
+    }
+
+    public fuelTypes selectFuelType(string model)
+    {
+        if (model == "DMC-12")
+        {
+            return fuelTypes.HouseholdWaste;
+        }
+        else
+        {
+            return fuelTypes.Gasoline;
+        }
     }
 
     public enum oilStatus

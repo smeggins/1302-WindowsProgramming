@@ -15,15 +15,7 @@ public class Car
     public Car(int vinNumber, string brand, string model, int yearBuilt)
     {
         registration = new Registration(vinNumber, brand, model, yearBuilt);
-
-        if (model == "DMC-12")
-        {
-            this.engine = new Engine(Engine.fuelTypes.HouseholdWaste);
-        }
-        else
-        {
-            this.engine = new Engine(Engine.fuelTypes.Gasoline);
-        }
+        this.engine = new Engine(model);
 
         this.dashboard = new Dashboard(this.engine.getFuelLevel(), (this.engine.getOilStatus() != Engine.oilStatus.Insufficient));
     }
