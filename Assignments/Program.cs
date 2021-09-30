@@ -7,7 +7,7 @@ namespace Assignments
     {
         static void Main(string[] args)
         {
-            Car.test();
+            CarTest.test();
         }
     }
 }
