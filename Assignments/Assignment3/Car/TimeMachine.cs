@@ -14,5 +14,6 @@ public abstract class TimeMachine : CarV2
         this.engine = new Engine(Engine.fuelTypes.HouseholdWaste);
     }
 
-    public override int distanceOnFuel() => (int)(plutoniumOutputLevel / milePer);
+    public override int distanceOnFuel() => (int)(plutoniumOutputLevel * milePer);
+    public override void fuelUp(int amount) => plutoniumOutputLevel = amount;
 }

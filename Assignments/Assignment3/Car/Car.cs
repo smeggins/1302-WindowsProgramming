@@ -39,6 +39,7 @@ public abstract class CarV2
     }
 
     public virtual int distanceOnFuel() => -1;
+    public virtual void fuelUp(int amount) { }
 
     //public static void test()
     //{

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 public abstract class GasCar : CarV2
 {
-    int gas;
-    int tankSizeGallons;
-    gasType requiredFuelType;
+    protected int gas;
+    protected int tankSizeGallons;
+    protected gasType requiredFuelType;
 
     public GasCar(int vinNumber, string brand, string model, int yearBuilt, float milePer, gasType requiredFuelType) : base(vinNumber, brand, model, yearBuilt, milePer)
     {
@@ -16,7 +16,8 @@ public abstract class GasCar : CarV2
         this.requiredFuelType = requiredFuelType;
     }
 
-    public override int distanceOnFuel() => (int)(gas / milePer);
+    public override int distanceOnFuel() => (int)(gas * milePer);
+    public override void fuelUp(int amount) => gas = amount;
 
     public enum gasType
     {

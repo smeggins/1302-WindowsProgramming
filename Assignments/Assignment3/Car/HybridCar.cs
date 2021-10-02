@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 public abstract class HybridCar : CarV2
 {
-    int gas;
-    GasCar.gasType requiredFuelType;
+    protected int gas;
+    protected GasCar.gasType requiredFuelType;
 
     int charge;
     int maxChargeJoules;
@@ -16,9 +16,12 @@ public abstract class HybridCar : CarV2
     {
         this.engine = new Engine(Engine.fuelTypes.Hybrid);
         this.requiredFuelType = requiredFuelType;
+        charge = 200;
 
     }
 
-    public override int distanceOnFuel() => (int)((gas / milePer) + (charge / .3));
+    public override int distanceOnFuel() => (int)((gas * milePer) + (charge / .3));
+    public override void fuelUp(int amount) => gas = amount;
+
 
 }

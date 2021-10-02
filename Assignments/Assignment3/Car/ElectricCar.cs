@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 public abstract class ElectricCar : CarV2
 {
-    int charge;
-    int maxChargeJoules;
+    protected int charge;
+    protected int maxChargeJoules;
 
     public ElectricCar(int vinNumber, string brand, string model, int yearBuilt, float milePer) : base(vinNumber, brand, model, yearBuilt, milePer)
     {
@@ -15,4 +15,5 @@ public abstract class ElectricCar : CarV2
     }
 
     public override int distanceOnFuel() => (int)(charge / milePer);
+    public override void fuelUp(int amount) => charge = amount;
 }
