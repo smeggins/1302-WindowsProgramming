@@ -96,10 +96,10 @@ public sealed class Singleton5
     private List<string> configs;
     // this lazy means that until this class is accessed it won't instantiate it'self
     private static readonly Lazy<Singleton5> instance = 
-        new Lazy<Singleton5>();
+        new Lazy<Singleton5>(() => new Singleton5());
 
     // the private constructor
-    public Singleton5()
+    private Singleton5()
     {
         configs = new List<string>()
             {
