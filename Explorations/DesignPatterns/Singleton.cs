@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 
 /*
  Design Patterns:
@@ -90,5 +86,43 @@ public sealed class Singleton4
         {
             return instance.Value;
         }
+    }
+}
+
+// this is a working version on the above singleton
+
+public sealed class Singleton5
+{
+    private List<string> configs;
+    // this lazy means that until this class is accessed it won't instantiate it'self
+    private static readonly Lazy<Singleton5> instance = 
+        new Lazy<Singleton5>();
+
+    // the private constructor
+    public Singleton5()
+    {
+        configs = new List<string>()
+            {
+                "123",
+                "456"
+            };
+    }
+
+    // this is the method by which you will access this class 
+    // ie Singleton5.Instance
+    // once called the lazy var above will execute.
+    public static Singleton5 Instance
+    {
+        get
+        {
+
+            return instance.Value;
+        }
+    }
+
+    // Now you can access the values using Singleton5.Instance.GetConfigs();
+    public List<string> getConfigs()
+    {
+        return configs;
     }
 }
