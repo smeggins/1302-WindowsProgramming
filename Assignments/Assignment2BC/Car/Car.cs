@@ -40,23 +40,6 @@ public abstract class CarV2
 
     public virtual int distanceOnFuel() => -1;
     public virtual void fuelUp(int amount) { }
-
-    //public static void test()
-    //{
-    //    var car1 = new CarV2(CarConfig1.vin, CarConfig1.brand, CarConfig1.model, CarConfig1.yearBuilt);
-    //    car1.print();
-
-    //    car1.dashboard.print();
-    //    car1.speedUp(15);
-    //    car1.dashboard.print();
-
-    //    var car2 = new CarV2(CarConfig2.vin, CarConfig2.brand, CarConfig2.model, CarConfig2.yearBuilt);
-    //    car2.print();
-
-    //    car2.dashboard.print();
-    //    car2.speedUp(15);
-    //    car2.dashboard.print();
-    //}
 }
 
 

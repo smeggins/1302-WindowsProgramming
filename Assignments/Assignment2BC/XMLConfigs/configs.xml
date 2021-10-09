@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Installation: run code once, then copy this file into this filepath: 
+				WindowsProgramming\Assignments\bin\Debug\net5.0\CarConfigs\configs.xml-->
+<cars>
+	<car brand="DeLorean" model="DMC-12" yearBuilt="1981" vin="543231" mileper="20"></car>
+	<car brand="Nissan" model="Leaf" yearBuilt="2021" vin="234564" mileper="0.3"></car>
+	<car brand="Tesla" model="3" yearBuilt="2022" vin="954324" mileper="0.31"></car>
+	<car brand="Toyota" model="Corolla" yearBuilt="2013" vin="732556" mileper="33"></car>
+</cars>

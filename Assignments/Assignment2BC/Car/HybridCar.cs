@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public abstract class HybridCar : CarV2
+public class HybridCar : CarV2
 {
     protected int gas;
     protected GasCar.gasType requiredFuelType;
@@ -12,6 +12,7 @@ public abstract class HybridCar : CarV2
     int charge;
     int maxChargeJoules;
 
+    public HybridCar() { }
     public HybridCar(int vinNumber, string brand, string model, int yearBuilt, float milePer, GasCar.gasType requiredFuelType) : base(vinNumber, brand, model, yearBuilt, milePer)
     {
         this.engine = new Engine(Engine.fuelTypes.Hybrid);
