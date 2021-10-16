@@ -6,7 +6,7 @@ namespace Explorations
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Logger.test();
         }
     }
 }
