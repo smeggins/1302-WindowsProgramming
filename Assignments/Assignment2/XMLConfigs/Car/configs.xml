@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--Installation: run code once, then copy this file into this filepath: 
-				WindowsProgramming\Assignments\bin\Debug\net5.0\CarConfigs\configs.xml-->
+				WindowsProgramming\Assignments\bin\Debug\net5.0\Configs\Car\configs.xml-->
 <cars>
 	<car brand="DeLorean" model="DMC-12" yearBuilt="1981" vin="543231" mileper="20" carType="TimeMachine"></car>
 	<car brand="Nissan" model="Leaf" yearBuilt="2021" vin="234564" mileper="0.3" carType="Electric"></car>

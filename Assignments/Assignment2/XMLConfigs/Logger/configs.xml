@@ -1,2 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Installation: run code once, then copy this file into this filepath: 
+				WindowsProgramming\Assignments\bin\Debug\net5.0\Configs\Logger\configs.xml-->
 <logger type="consoleLog"></logger>
