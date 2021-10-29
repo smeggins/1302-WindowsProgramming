@@ -101,6 +101,24 @@ public static class CarTest
                 checkTestBuilder(corolla, "Toyota", 33, "Corolla", 732556, 2013));
     }
 
+    public static bool testFactory(ILogger logger)
+    {
+
+        var factory = new CarFactory(logger);
+        List<CarV2> cars = new List<CarV2>();
+
+        for (int i = 0; i < CarConfigs.Instance.getConfigs().Count(); i++)
+        {
+            cars.Add(factory.BuildCarsFromConfig(i));
+        }
+        
+
+        return (checkTestBuilder(cars[0], "DeLorean", 20, "DMC-12", 543231, 1981) &&
+                checkTestBuilder(cars[1], "Nissan", 0.3f, "Leaf", 234564, 2021) &&
+                checkTestBuilder(cars[2], "Tesla", 0.31f, "3", 954324, 2022) &&
+                checkTestBuilder(cars[3], "Toyota", 33, "Corolla", 732556, 2013));
+    }
+
     public static void buildException(ILogger logger)
     {
         var builder = new CarBuilder(logger);

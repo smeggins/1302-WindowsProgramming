@@ -41,10 +41,10 @@ public abstract class CarV2
     public string getRegistration()
     {
         var sb = new StringBuilder();
-        sb.Append("brand: " + this.registration.brand + "\n");
-        sb.Append("model: " + this.registration.model + "\n");
-        sb.Append("year: " + this.registration.yearBuilt + "\n");
-        sb.Append("vin Number: " + this.registration.vinNumber);
+        sb.Append("      brand: " + this.registration.brand + "\n");
+        sb.Append("      model: " + this.registration.model + "\n");
+        sb.Append("      year: " + this.registration.yearBuilt + "\n");
+        sb.Append("      vin Number: " + this.registration.vinNumber);
 
         return sb.ToString();
     }

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 public class TimeMachine : CarV2
 {
     protected int plutoniumOutputLevel;
-    protected int fluxCapacitorReading;
 
     public TimeMachine() { }
     public TimeMachine(int vinNumber, string brand, string model, int yearBuilt, float milePer) : base(vinNumber, brand, model, yearBuilt, milePer)

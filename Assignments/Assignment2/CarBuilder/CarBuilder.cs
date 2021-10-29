@@ -28,14 +28,14 @@ public class CarBuilder
     public CarBuilder addvinNumber(int vinNumber)
     {
         this.vinNumber = vinNumber;
-        logger.logInformation($"Adding Brand: {brand}");
+        logger.logInformation($"Adding vinNumber: {vinNumber}");
 
         return this;
     }
     public CarBuilder addmodel(string model)
     {
         this.model = model;
-        logger.logInformation($"Adding vinNumber: {vinNumber}");
+        logger.logInformation($"Adding model: {model}");
 
         return this;
     }
@@ -77,24 +77,24 @@ public class CarBuilder
             if (carType == carTypes.Electric)
             {
                 car = new ElectricCar(vinNumber, brand, model, yearBuilt, milePer);
-                logger.logInformation($"\n\nBuilding an electric car with the following details:\n{car.getRegistration()}");
+                logger.logInformation($"\n   Building an electric car with the following details:\n{car.getRegistration()}\n");
             }
             else if (carType == carTypes.Gas)
             {
                 car = new GasCar(vinNumber, brand, model, yearBuilt, milePer, gasType);
-                logger.logInformation($"\n\nBuilding a gas car with the following details:\n{car.getRegistration()}");
+                logger.logInformation($"\n   Building a gas car with the following details:\n{car.getRegistration()}\n");
 
             }
             else if (carType == carTypes.Hybrid)
             {
                 car = new HybridCar(vinNumber, brand, model, yearBuilt, milePer, gasType);
-                logger.logInformation($"\n\nBuilding a hybrid car with the following details:\n{car.getRegistration()}");
+                logger.logInformation($"\n   Building a hybrid car with the following details:\n{car.getRegistration()}\n");
 
             }
             else if (carType == carTypes.TimeMachine)
             {
                 car = new TimeMachine(vinNumber, brand, model, yearBuilt, milePer);
-                logger.logInformation($"\n\nBuilding a TimeMachine Marty!... with the following details:\n{car.getRegistration()}");
+                logger.logInformation($"\n   Building a TimeMachine Marty!... with the following details:\n{car.getRegistration()}\n");
 
             }
         }

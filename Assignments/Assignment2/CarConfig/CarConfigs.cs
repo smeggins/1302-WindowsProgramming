@@ -15,7 +15,7 @@ public sealed class CarConfigs
 
     private CarConfigs()
     {
-        this.logger = new Logger();
+        this.logger = new ConsoleLogger(); //defaults to log to console
         configs = new List<CarConfig>();
         load();
     }
@@ -30,11 +30,16 @@ public sealed class CarConfigs
         return configs;
     }
 
+    public void setLogger(ILogger logger)
+    {
+        this.logger = logger;
+    }
+
     private void load()
     {
         try
         {
-            XDocument configFile = XDocument.Load("CarConfigs/configs.xml");
+            XDocument configFile = XDocument.Load("Configs/Cars/configs.xml");
 
             foreach (var car in configFile.Descendants("car"))
             {
@@ -44,11 +49,13 @@ public sealed class CarConfigs
                 int yearBuilt;
                 int vin;
                 float mileper;
+                CarBuilder.carTypes carType;
                 int.TryParse(car.Attributes().Where(e => e.Name == "yearBuilt").First().Value, out yearBuilt);
                 int.TryParse(car.Attributes().Where(e => e.Name == "vin").First().Value, out vin);
                 float.TryParse(car.Attributes().Where(e => e.Name == "mileper").First().Value, out mileper);
+                CarBuilder.carTypes.TryParse(car.Attributes().Where(e => e.Name == "carType").First().Value, out carType);
 
-                configs.Add(new CarConfig(brand, model, yearBuilt, vin, mileper));
+                configs.Add(new CarConfig(brand, model, yearBuilt, vin, mileper, carType));
             }
         }
         catch (Exception ex)
@@ -65,13 +72,20 @@ public class CarConfig
     public int yearBuilt;
     public int vin;
     public float mileper;
+    public CarBuilder.carTypes carType;
 
-    public CarConfig(string brand, string model, int yearBuilt, int vin, float mileper)
+    public CarConfig(   string brand, 
+                        string model, 
+                        int yearBuilt, 
+                        int vin, 
+                        float mileper, 
+                        CarBuilder.carTypes carType)
     {
         this.brand = brand;
         this.model = model;
         this.yearBuilt = yearBuilt;
         this.vin = vin;
         this.mileper = mileper;
-    }
+        this.carType = carType;
+}
 }

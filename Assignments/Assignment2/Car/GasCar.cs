@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 public class GasCar : CarV2
 {
     protected int gas;
-    protected int tankSizeGallons;
     protected gasType requiredFuelType;
 
     public GasCar() { }

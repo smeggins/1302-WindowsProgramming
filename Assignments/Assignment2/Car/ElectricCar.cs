@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 public class ElectricCar : CarV2
 {
     protected int charge;
-    protected int maxChargeJoules;
 
     public ElectricCar() { }
     public ElectricCar(int vinNumber, string brand, string model, int yearBuilt, float milePer) : base(vinNumber, brand, model, yearBuilt, milePer)
