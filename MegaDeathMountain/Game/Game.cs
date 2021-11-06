@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DoomSlayer9000OmegaForce1;
-namespace DoomSlayer9000OmegaForce1
+using MegaDeathMountain;
+
+namespace MegaDeathMountain
 {
     //TODO Add intro to battles
-    // move battles to method that generates enemy
-    // make enemies
     // make alternate character types
     // add logger implementation
-    // move method implementations on knight to player as makes sense
     // add intro screen
     // add exit screen
-    // fix bug where you can press enter during camp rest ZZZ and it skips ahead screens
 
 
     /// <summary>
@@ -51,26 +48,46 @@ namespace DoomSlayer9000OmegaForce1
     /// </summary>
     class Game
     {
-        private void attackLoop(IActor player1, IActor player2)
+
+        bool debugMode = true;
+        ILogger logger = new WriteLogger();
+
+        private void attackLoop(Player player1, Enemy Enemy)
         {
             int round = 1;
-            while ((player1._CurrentHealth > 0 && player2._CurrentHealth > 0))
+            while ((player1._CurrentHealth > 0 && Enemy._CurrentHealth > 0))
             {
                 Console.Clear();
-                Console.WriteLine($"\nPlayer 1 health: {player1._CurrentHealth}");
-                Console.WriteLine($"Player 2 health: {player2._CurrentHealth}\n");
+                Console.WriteLine($"\n{player1._Name} health: {player1._CurrentHealth}");
+                Console.WriteLine($"Enemy health: {Enemy._CurrentHealth}\n");
 
-                player1.attack(player2, Dialogue.Instance.getRandomAttackMsg());
+                player1.attack(Enemy, Dialogue.Instance.getRandomAttackMsg());
 
-                player2.attack(player1, Dialogue.Instance.getRandomAttackMsg());
-
+                if (Enemy._CurrentHealth > 0)
+                {
+                    if (Enemy.waitingToAttack == false)
+                    {
+                        Enemy.attack(player1, Dialogue.Instance.getRandomAttackMsg());
+                    }
+                    else
+                    {
+                        Enemy.specialAttack(player1);
+                        Enemy.waitingToAttack = false;
+                    }
+                }
                 Console.WriteLine($"\nEnd of round {round}\n\n");
                 round++;
                 waitForEnter();
             }
         }
 
-        public void waitForEnter()
+        public static void clearConsoleBuffer()
+        {
+            while (Console.KeyAvailable)
+                Console.ReadKey(false);
+        }
+
+        public static void waitForEnter()
         {
             Console.WriteLine("\nPress Enter To Continue:");
             while (true)
@@ -92,12 +109,64 @@ namespace DoomSlayer9000OmegaForce1
             }
         }
 
+        private Enemy chooseEnemy(int playerLevel, Random RNG)
+        {
+            int rng = RNG.Next(0, 100);
+
+            //level 1 spawn priority
+            int demonPriority = 8;
+            int vampirePriority = 4;
+            int cryptLordPriority = 2;
+
+            if (playerLevel > 1) 
+            {
+                cryptLordPriority = cryptLordPriority * playerLevel;
+                vampirePriority = vampirePriority * playerLevel;
+                demonPriority = demonPriority * playerLevel;
+            }
+            if (this.debugMode == true)
+            {
+                logger.logDebugInformation(($"\n\n---------------------\nEnemy ChooseEnemy: {rng}\n" +
+                    $"impPriority: {(((100 - cryptLordPriority - vampirePriority - demonPriority) > 0) ? 100 - cryptLordPriority - vampirePriority - demonPriority : 0)}\n" +
+                    $"demonPriority: {demonPriority}\n" +
+                    $"vampirePriority: {vampirePriority}\n" +
+                    $"cryptLordPriority: {cryptLordPriority}\n" +
+                    $"---------------------\n\n"));
+            }
+
+            if (rng < cryptLordPriority)
+            {
+                return new CryptLord("Crypt Lord", playerLevel);
+            }
+            else if (rng < vampirePriority)
+            {
+                return new Vampire("Vampire", playerLevel);
+            }
+            else if (rng < demonPriority)
+            {
+                return new Demon("Demon", playerLevel);
+            }
+            else
+            {
+                return new Imp("Imp", playerLevel);
+            }
+        }
+
         public void start()
         {
-            Console.WriteLine("What is your Name: ");
-            Knight player1 = new Knight(Console.ReadLine());
-            cheat(player1, "p");
-            Knight player2 = new Knight("Tim The Bastard");
+            Console.Write("What is your Name: ");
+            Knight player1;
+            try
+            {
+                player1 = new Knight(Console.ReadLine()); cheat(player1, "p");
+            }
+            catch (Exception ex)
+            {
+                logger.logException("Exception assigning player name.", ex);
+                throw new ArgumentException();
+            }
+
+            Enemy Enemy;
 
             Console.Clear();
             Console.WriteLine("You arrive in the desolate, uforgiving mega death mountain." +
@@ -106,10 +175,10 @@ namespace DoomSlayer9000OmegaForce1
             waitForEnter();
             int levels = 0;
 
-            while (levels < 5)
+            while (levels < 9)
             {
-                player2 = new Knight("Tim The Bastard");
-                attackLoop(player1, player2);
+                Enemy = chooseEnemy(player1._Level, new Random());
+                attackLoop(player1, Enemy);
 
                 if (player1._CurrentHealth > 0)
                 {

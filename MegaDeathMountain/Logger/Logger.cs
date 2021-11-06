@@ -3,94 +3,85 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace DoomSlayer9000OmegaForce1
+namespace MegaDeathMountain
 {
     public interface ILogger
     {
-        void logInformation(string message);
+        void logDebugInformation(string message);
         void logError(string message);
         void logException(string message, Exception exception);
     }
 
     public abstract class Logger : ILogger
     {
-        public void logError(string message)
+        public virtual void logError(string message)
         {
             var msg = String.Format("Log Error: {0}", message);
             write(msg);
         }
 
-        public void logException(string message, Exception exception)
+        public virtual void logException(string message, Exception exception)
         {
             var msg = String.Format("Exception Logged: {0} {1}", message, exception);
             write(msg);
         }
 
-        public void logInformation(string message)
+        public virtual void logDebugInformation(string message)
         {
-            var msg = String.Format("Log Information: {0}", message);
+            var msg = String.Format("Log debug Information: {0}", message);
             write(msg);
         }
 
-        protected virtual void write(string message) { }
+        protected abstract void write(string message, string fileLocation="");
     }
 
-    public class WriteLogger : ILogger
+    public class WriteLogger : Logger
     {
         string rootPath = "Logs/";
-        string exception = "ExceptionLogs/";
-        string error = "ErrorLogs/";
-        string information = "InformationLogs/";
+        string exceptionPath = "ExceptionLogs/";
+        string errorPath = "ErrorLogs/";
+        string informationPath = "DebugLogs/";
 
-        public void logError(string message)
+        public WriteLogger()
+        {
+            Console.WriteLine("creating files>");
+            using (File.Create(rootPath + errorPath + "errorLog.txt")) ;
+            using (File.Create(rootPath + exceptionPath + "exceptionLog.txt")) ;
+            using (File.Create(rootPath + informationPath + "debugLog.txt"));
+        }
+
+        public override void logError(string message)
         {
             var msg = String.Format("Log Error: {0}", message);
-            writeToFile($"{rootPath}{error}errorLog.txt", msg);
+            write(msg, rootPath + errorPath + "errorLog.txt");
         }
 
-        public void logException(string message, Exception exception)
+        public override void logException(string message, Exception exception)
         {
             var msg = String.Format("Exception Logged: {0} {1}", message, exception);
-            writeToFile($"{rootPath}{exception}ExceptionLog.txt", msg);
+            write(msg, rootPath + exceptionPath + "exceptionLog.txt");
         }
 
-        public void logInformation(string message)
+        public override void logDebugInformation(string message)
         {
-            var msg = String.Format("Log Information: {0}", message);
-            writeToFile($"{rootPath}{information}InformationLog.txt", msg);
+            var msg = String.Format("Log debug Information: {0}", message);
+            write(msg, rootPath + informationPath + "debugLog.txt");
         }
 
-        private void write(string message)
+        protected override void write(string message, string fileLocation)
         {
-            Console.WriteLine(message);
-        }
+            Console.WriteLine($"total path: {fileLocation}");
 
-        private void writeToFile(string fileLocation, string message)
-        {
-            File.WriteAllText(fileLocation, message);
+            File.AppendAllText(fileLocation, message);
         }
     }
 
-    public class ConsoleLogger : ILogger
+    public class ConsoleLogger : Logger
     {
-        public void logError(string message)
-        {
-            write($"Log Error: {message}");
-        }
-
-        public void logException(string message, Exception exception)
-        {
-            write($"Exception Logged: {message} {exception}");
-        }
-
-        public void logInformation(string message)
-        {
-            write($"Log Information: {message}");
-        }
-
-        private void write(string message)
+        protected override void write(string message, string fileLocation = "")
         {
             Console.WriteLine(message);
+            Game.waitForEnter();
         }
     }
 }

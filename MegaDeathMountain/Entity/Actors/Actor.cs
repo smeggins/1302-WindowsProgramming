@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoomSlayer9000OmegaForce1
+namespace MegaDeathMountain
 {
     public interface IActor
     {
@@ -55,9 +55,25 @@ namespace DoomSlayer9000OmegaForce1
 
         public abstract int attack(IActor target, string attackMessage);
 
-        public abstract bool defend(int attack);
+        public bool defend(int attack)
+        {
+            int rn = _RNG.Next(1, 100);
 
-        public abstract void die(string deathMessage);
+            if (attack != (this._Attack * 2))
+            {
+                return (rn >= this._Defence) ? true : false;
+            }
+            else
+            {
+                return (rn >= (this._Defence / 2)) ? true : false;
+            }
+        }
+
+
+        public void die(string deathMessage)
+        {
+            Console.WriteLine(this._Name + deathMessage);
+        }
 
         public abstract void specialAttack(IActor target);
 
@@ -67,6 +83,9 @@ namespace DoomSlayer9000OmegaForce1
             Console.WriteLine($"{damage} damage\n\n");
             this._CurrentHealth -= damage;
         }
-        public abstract void missAttack(string missMessage);
+        public void missAttack(string missMessage)
+        {
+            Console.WriteLine(_Name + missMessage);
+        }
     }
 }

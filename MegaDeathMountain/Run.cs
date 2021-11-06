@@ -1,6 +1,7 @@
 ﻿using System;
+using MegaDeathMountain;
 
-namespace DoomSlayer9000OmegaForce1
+namespace MegaDeathMountain
 {
     class Run
     {
