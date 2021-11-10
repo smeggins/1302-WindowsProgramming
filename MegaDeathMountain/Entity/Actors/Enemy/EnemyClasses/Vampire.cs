@@ -10,10 +10,15 @@ namespace MegaDeathMountain
     {
         public Vampire(string name, int playerLevel) : base(name, creationDefense(playerLevel, 3), creationAttack(playerLevel, 3), creationHealth(playerLevel)) { }
 
+        public override List<string> Image()
+        {
+            return EnemyImages.Instance.GetVampire();
+        }
+
         public override void specialAttack(IActor target)
         {
-            Console.WriteLine("\nThe Vampire appears behind you an sinks its teeth deep in your neck!");
-            target.takeDamage(this._Attack * 3, Dialogue.Instance.getRandomHitMsg());
+            UILineManager.PrintLine("\nThe Vampire appears behind you an sinks its teeth deep in your neck!");
+            target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
         }
     }
 }

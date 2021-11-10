@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MegaDeathMountain
 {
-
     public sealed class Dialogue
     {
         List<string> attackMsg;

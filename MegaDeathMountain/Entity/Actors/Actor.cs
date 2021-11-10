@@ -8,33 +8,35 @@ namespace MegaDeathMountain
 {
     public interface IActor
     {
-        public int _CurrentHealth { get; set; }
+        public int CurrentHealth { get; set; }
         public void takeDamage(int damage, string damageMessage);
         public void die(string deathMessage);
         public int attack(IActor target, string attackMessage);
         public void specialAttack(IActor target);
-        public bool defend(int attack);
+        public bool dodge(int attack);
         public void missAttack(string missMessage);
     }
 
     public abstract class Actor : IActor
     {
         protected Random _RNG = new Random();
-        public string _Name;
-        public int _Defence;
-        public int _Attack;
+        public string Name;
+        public int Defence;
+        public int Attack;
+        public bool Defending;
 
-        public int _Level;
-        public int _TotalHealth;
-        public int currentHealth;
-        public int _CurrentHealth 
+
+        public int Level;
+        public int TotalHealth;
+        private int currentHealth;
+        public int CurrentHealth 
         { 
             get { return currentHealth; }
             set 
             {
                 if ( (value) > 0 )
                 {
-                    currentHealth = (value < _TotalHealth) ? value : _TotalHealth;
+                    currentHealth = (value < TotalHealth) ? value : TotalHealth;
                 }
                 else 
                 {
@@ -45,47 +47,49 @@ namespace MegaDeathMountain
         }
         public Actor(string Name, int defense, int attack, int totalHealth = 100)
         {
-            _Name = Name;
-            _Defence = defense;
-            _Attack = attack;
-            _Level = 1;
-            _TotalHealth = totalHealth;
-            _CurrentHealth = _TotalHealth;
+            this.Name = Name;
+            Defence = defense;
+            Attack = attack;
+            Level = 1;
+            TotalHealth = totalHealth;
+            CurrentHealth = TotalHealth;
+            Defending = false;
         }
 
         public abstract int attack(IActor target, string attackMessage);
 
-        public bool defend(int attack)
+        public bool dodge(int attack)
         {
             int rn = _RNG.Next(1, 100);
+            int ActiveDefence = (Defending) ? Defence * 2 : Defence;
 
-            if (attack != (this._Attack * 2))
+            if (attack != (this.Attack * 2))
             {
-                return (rn >= this._Defence) ? true : false;
+                return (rn >= ActiveDefence) ? true : false;
             }
             else
             {
-                return (rn >= (this._Defence / 2)) ? true : false;
+                return (rn >= (ActiveDefence / 2)) ? true : false;
             }
         }
 
 
         public void die(string deathMessage)
         {
-            Console.WriteLine(this._Name + deathMessage);
+            UILineManager.PrintLine(this.Name + deathMessage);
         }
 
         public abstract void specialAttack(IActor target);
 
         public virtual void takeDamage(int damage, string damageMessage)
         {
-            Console.WriteLine($"\n\n{_Name}{damageMessage}");
-            Console.WriteLine($"{damage} damage\n\n");
-            this._CurrentHealth -= damage;
+            UILineManager.PrintLine($"\n\n{Name}{damageMessage}");
+            UILineManager.PrintLine($"{damage} damage\n\n");
+            this.CurrentHealth -= damage;
         }
         public void missAttack(string missMessage)
         {
-            Console.WriteLine(_Name + missMessage);
+            UILineManager.PrintLine(Name + missMessage);
         }
     }
 }

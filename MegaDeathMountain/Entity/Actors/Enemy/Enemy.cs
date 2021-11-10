@@ -8,36 +8,36 @@ namespace MegaDeathMountain
 {
     public abstract class Enemy : Actor
     {
-        public bool waitingToAttack = false;
+        public bool WaitingToAttack = false;
         public Enemy(string name, int defense, int attack, int health) : base(name, defense, attack, health) {  }
+
+        public abstract List<string> Image();
 
         public override int attack(IActor target, string attackMessage)
         {
-            int damage = this._Attack;
-
-            if (waitingToAttack == false)
+            if (WaitingToAttack == false)
             {
                 if (_RNG.Next(1, 10) > 3)
                 {
-                    Console.WriteLine(_Name + "Begins charging for a powerful attack");
-                    waitingToAttack = true;
+                    UILineManager.PrintLine(Name + "Begins charging for a powerful attack");
+                    WaitingToAttack = true;
                     return 0;
                 }
                 else
                 {
-                    Console.WriteLine(_Name + attackMessage);
+                    UILineManager.PrintLine(Name + attackMessage);
 
-                    if (target.defend(_Attack) == false)
+                    if (target.dodge(Attack) == false)
                     {
                         target.missAttack(Dialogue.Instance.getRandomMissMsg());
                         return 0;
                     }
                     else
                     {
-                        target.takeDamage(_Attack, Dialogue.Instance.getRandomHitMsg());
+                        target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
 
                     }
-                    return _Attack;
+                    return Attack;
                 }
             }
             return 0;

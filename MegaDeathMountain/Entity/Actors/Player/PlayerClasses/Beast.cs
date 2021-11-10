@@ -17,9 +17,9 @@ namespace MegaDeathMountain
     // public float RegenRate;
     // public float CurrentEnergy
     /// </summary>
-    public class Knight : Player
+    public class Beast : Player
     {
-        public Knight(string name) : base(name, 24, 20, 10) {  }
+        public Beast(string name) : base(name, 12, 10, 15) {  }
 
         public override void specialAttack(IActor target)
         {

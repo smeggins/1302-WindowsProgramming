@@ -33,7 +33,7 @@ namespace MegaDeathMountain
     /// choose class
     /// instructions
     /// fight
-    ///     choose attack or defend
+    ///     choose attack or dodge
     ///     enemy attack
     ///     repeat
     /// choose to rest
@@ -49,33 +49,37 @@ namespace MegaDeathMountain
     class Game
     {
 
-        bool debugMode = true;
-        ILogger logger = new WriteLogger();
+        bool debugMode = false;
+        ILogger logger = new ConsoleLogger();
 
         private void attackLoop(Player player1, Enemy Enemy)
         {
             int round = 1;
-            while ((player1._CurrentHealth > 0 && Enemy._CurrentHealth > 0))
+            Console.Clear();
+            BattleUI.drawBattle(round, player1, Enemy);
+            waitForEnter();
+            Console.Clear();
+            while ((player1.CurrentHealth > 0 && Enemy.CurrentHealth > 0))
             {
                 Console.Clear();
-                Console.WriteLine($"\n{player1._Name} health: {player1._CurrentHealth}");
-                Console.WriteLine($"Enemy health: {Enemy._CurrentHealth}\n");
+                UILineManager.PrintLine($"\n{player1.Name} health: {player1.CurrentHealth}");
+                UILineManager.PrintLine($"Enemy health: {Enemy.CurrentHealth}\n");
 
                 player1.attack(Enemy, Dialogue.Instance.getRandomAttackMsg());
 
-                if (Enemy._CurrentHealth > 0)
+                if (Enemy.CurrentHealth > 0)
                 {
-                    if (Enemy.waitingToAttack == false)
+                    if (Enemy.WaitingToAttack == false)
                     {
                         Enemy.attack(player1, Dialogue.Instance.getRandomAttackMsg());
                     }
                     else
                     {
                         Enemy.specialAttack(player1);
-                        Enemy.waitingToAttack = false;
+                        Enemy.WaitingToAttack = false;
                     }
                 }
-                Console.WriteLine($"\nEnd of round {round}\n\n");
+                UILineManager.PrintLine($"\nEnd of round {round}\n\n");
                 round++;
                 waitForEnter();
             }
@@ -89,7 +93,7 @@ namespace MegaDeathMountain
 
         public static void waitForEnter()
         {
-            Console.WriteLine("\nPress Enter To Continue:");
+            UILineManager.PrintLine("\nPress Enter To Continue:");
             while (true)
             {
                 if (Console.ReadKey(true).Key == ConsoleKey.Enter)
@@ -101,11 +105,11 @@ namespace MegaDeathMountain
 
         private void cheat(Player player, string cheatkey)
         {
-            if(player._Name == cheatkey)
+            if(player.Name == cheatkey)
             {
-                player._Attack = 1000;
-                player._TotalHealth = 1000;
-                player._CurrentHealth = player._TotalHealth;
+                player.Attack = 1000;
+                player.TotalHealth = 1000;
+                player.CurrentHealth = player.TotalHealth;
             }
         }
 
@@ -154,7 +158,7 @@ namespace MegaDeathMountain
 
         public void start()
         {
-            Console.Write("What is your Name: ");
+            UILineManager.PrintChars("What is your Name: ");
             Knight player1;
             try
             {
@@ -169,23 +173,26 @@ namespace MegaDeathMountain
             Enemy Enemy;
 
             Console.Clear();
-            Console.WriteLine("You arrive in the desolate, uforgiving mega death mountain." +
+            UILineManager.PrintLine("You arrive in the desolate, uforgiving mega death mountain." +
                 "\nOnly the strongest can reach the top." +
                 "\nGood luck...");
             waitForEnter();
             int levels = 0;
 
+            
+
             while (levels < 9)
             {
-                Enemy = chooseEnemy(player1._Level, new Random());
+                Enemy = chooseEnemy(player1.Level, new Random());
+                UILineManager.PrintLine($"As you walk around the bend,{Enemy.Name} Appears in front of you, blocking your way.");
                 attackLoop(player1, Enemy);
 
-                if (player1._CurrentHealth > 0)
+                if (player1.CurrentHealth > 0)
                 {
-                    Console.WriteLine($"Congrats {player1._Name}, You survived another level of MEGA DEATH MOUNTAIN!");
-                    Console.WriteLine($"\n{player1._Name} stats:");
-                    Console.WriteLine($"Health: {player1._CurrentHealth}");
-                    Console.WriteLine($"Energy: {player1._CurrentEnergy}");
+                    UILineManager.PrintLine($"Congrats {player1.Name}, You survived another level of MEGA DEATH MOUNTAIN!");
+                    UILineManager.PrintLine($"\n{player1.Name} stats:");
+                    UILineManager.PrintLine($"Health: {player1.CurrentHealth}");
+                    UILineManager.PrintLine($"Energy: {player1.CurrentEnergy}");
                     player1.makeCamp();
                     waitForEnter();
                     player1.level();
@@ -193,20 +200,16 @@ namespace MegaDeathMountain
                 }
                 else
                 {
-                    Console.WriteLine("You had a good run, maybe next time you'll conquer MEGA DEATH MOUNTAIN!");
+                    UILineManager.PrintLine("You had a good run, maybe next time you'll conquer MEGA DEATH MOUNTAIN!");
                     waitForEnter();
                     break;
                 }
                 levels++;
             }
 
-            
-
             Console.Clear();
-            Console.WriteLine("Thanks for playing");
+            UILineManager.PrintLine("Thanks for playing");
 
         }
-        
-        
     }
 }

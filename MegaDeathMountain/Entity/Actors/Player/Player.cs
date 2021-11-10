@@ -9,17 +9,17 @@ namespace MegaDeathMountain
 {
     public abstract class Player : Actor
     {
-        public int _TotalEnergy;
-        public int _RegenRate;
-        public int currentEnergy;
-        public int _CurrentEnergy
+        public int TotalEnergy;
+        public int RegenRate;
+        private int currentEnergy;
+        public int CurrentEnergy
         {
             get { return currentEnergy; }
             set
             {
                 if ((currentEnergy + value) > 0)
                 {
-                    currentEnergy = ((currentEnergy + value) < _TotalEnergy) ? (currentEnergy + value) : _TotalEnergy;
+                    currentEnergy = ((currentEnergy + value) < TotalEnergy) ? (currentEnergy + value) : TotalEnergy;
                 }
                 else
                 {
@@ -28,34 +28,39 @@ namespace MegaDeathMountain
             }
         }
 
-        public Player(string name, int regenRate, int defense, int attack) : base(name, defense, attack) { _TotalEnergy = 10; _RegenRate = regenRate; }
+        public Player(string name, int regenRate, int defense, int attack) : base(name, defense, attack) { TotalEnergy = 10; RegenRate = regenRate; }
 
         public override int attack(IActor target, string attackMessage)
         {
-            Console.WriteLine(_Name + attackMessage);
-            if (target.defend(_Attack) == false)
+            UILineManager.PrintLine(Name + attackMessage);
+            if (target.dodge(Attack) == false)
             {
                 target.missAttack(Dialogue.Instance.getRandomMissMsg());
                 return 0;
             }
             else
             {
-                _CurrentEnergy += 1;
-                target.takeDamage(_Attack, Dialogue.Instance.getRandomHitMsg());
-                return _Attack;
+                CurrentEnergy += 1;
+                target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
+                return Attack;
             }
 
+        }
+
+        public void Defend()
+        {
+            this.Defending = true;
         }
 
         public void makeCamp()
         {
             Console.Clear();
-            if (this._CurrentHealth != this._TotalHealth)
+            if (this.CurrentHealth != this.TotalHealth)
             {
-                Console.WriteLine("How many Hours Would you Like to Rest: (0-24)");
-                Console.WriteLine("24 hours fully heals you from 1 health, energy depletes while resting.\n\n");
+                UILineManager.PrintLine("How many Hours Would you Like to Rest: (0-24)");
+                UILineManager.PrintLine("24 hours fully heals you from 1 health, energy depletes while resting.\n\n");
 
-                Console.Write("How many Hours Would you Like to Rest (0-24): ");
+                UILineManager.PrintChars("How many Hours Would you Like to Rest (0-24): ");
                 int restTime;
 
                 while (true)
@@ -64,80 +69,71 @@ namespace MegaDeathMountain
                     {
                         break;
                     }
-                    Console.WriteLine("Not a valid entry. Please enter a number between 1 and 24");
+                    UILineManager.PrintLine("Not a valid entry. Please enter a number between 1 and 24");
                 }
 
                 if (restTime > 0)
                 {
-                    int lifeGain = (_TotalHealth / _RegenRate) * restTime;
-                    int energyLost = (_TotalEnergy / 24) * restTime;
+                    int lifeGain = (TotalHealth / RegenRate) * restTime;
+                    int energyLost = (TotalEnergy / 24) * restTime;
 
-                    Console.WriteLine($"Ok, you rest for {restTime} hours.");
+                    UILineManager.PrintLine($"Ok, you rest for {restTime} hours.");
                     Thread.Sleep(1000);
                     Console.Clear();
-                    Console.Write("                   ");
+                    UILineManager.PrintChars("                   ");
                     for (int i = 0; i < 4; i++)
                     {
                         Thread.Sleep(1000);
-                        Console.Write("Z");
+                        UILineManager.PrintChars("Z");
                     }
                     Thread.Sleep(1000);
-                    Console.Write("z");
+                    UILineManager.PrintChars("z");
                     Thread.Sleep(1000);
                     Console.Clear();
 
                     // clears console buffer
                     Game.clearConsoleBuffer();
 
-                    Console.WriteLine("\n\nYou Wake up feeling rested and ready for battle!");
-                    _CurrentHealth += lifeGain;
-                    Console.WriteLine($"\nNew Health: {_CurrentHealth}  Gained {lifeGain}!");
-                    _CurrentEnergy += energyLost;
-                    Console.WriteLine($"New Energy: {_CurrentEnergy}  Lost {energyLost}...");
+                    UILineManager.PrintLine("\n\nYou Wake up feeling rested and ready for battle!");
+                    CurrentHealth += lifeGain;
+                    UILineManager.PrintLine($"\nNew Health: {CurrentHealth}  Gained {lifeGain}!");
+                    CurrentEnergy += energyLost;
+                    UILineManager.PrintLine($"New Energy: {CurrentEnergy}  Lost {energyLost}...");
                     return;
                 }
                 else
                 {
-                    Console.WriteLine($"Rest is for the Weak. Onwards and upwards!");
+                    UILineManager.PrintLine($"Rest is for the Weak. Onwards and upwards!");
                 }
             }
             
-            Console.WriteLine($"Having taken no damage you decide to continue acending MEGA DEATH MOUNTAIN!");
+            UILineManager.PrintLine($"Having taken no damage you decide to continue acending MEGA DEATH MOUNTAIN!");
         }
 
         public void level()
         {
             Console.Clear();
-            //Console.WriteLine("******************************************|******************************************");
-            this._Level += 1;
-            Console.WriteLine("\n\n*************************************************************************************");
-            Console.WriteLine("***** You've battled your way a little closer to the top of MEGA DEATH MOUNTAIN *****");
-            Console.WriteLine("*************************************************************************************");
-            Console.WriteLine($"************************************** Level {_Level} **************************************");
+            this.Level += 1;
+            UILineManager.SkipLine(2);
+            UILineManager.DrawMenuLine();
+            UILineManager.DrawMenuLine(" You've battled your way a little closer to the top of MEGA DEATH MOUNTAIN ");
+            UILineManager.DrawMenuLine();
+            UILineManager.DrawMenuLine((ConsoleColor.Blue, $" Level {Level} "));
 
-            if (_Level % 2 == 0 || _Level % 3 == 0)
+            if (Level % 2 == 0 || Level % 3 == 0)
             {
-                _TotalHealth += 10;
-                _CurrentHealth += 10;
+                TotalHealth += 10;
+                CurrentHealth += 10;
 
-                Console.Write($"****************************** ");
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.Write("New");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($" Total Health: {_TotalHealth} *******************************");
+                UILineManager.DrawMenuLine(new List<(ConsoleColor, string)>() { (ConsoleColor.DarkYellow, " New "), (ConsoleColor.White, $" Total Health: {TotalHealth} ") });
             }
             else
             {
-                _Defence += 1;
+                Defence += 1;
 
-
-                Console.Write($"****************************)** ");
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.Write("New");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($" Defence: {_Defence} + {10} *****************************");
+                UILineManager.DrawMenuLine(new List<(ConsoleColor, string)>() { (ConsoleColor.DarkYellow, " New "), (ConsoleColor.White, $" Defence: {Defence} ") });
             }
-            Console.WriteLine("\n*************************************************************************************");
+            UILineManager.DrawMenuLine();
         }
     }
 }
