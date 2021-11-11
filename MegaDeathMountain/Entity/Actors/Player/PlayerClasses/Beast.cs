@@ -19,12 +19,13 @@ namespace MegaDeathMountain
     /// </summary>
     public class Beast : Player
     {
-        public Beast(string name) : base(name, 12, 10, 15) {  }
+        public Beast(string name, ILogger logger) : base(name, 12, 10, 15, logger) {  }
 
         public override void specialAttack(IActor target)
         {
             UILineManager.PrintLine("Get absolutely fuckerd");
             target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
+            this.CurrentEnergy = 0;
         }
     }
 }

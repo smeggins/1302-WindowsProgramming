@@ -28,7 +28,7 @@ namespace MegaDeathMountain
             }
         }
 
-        public Player(string name, int regenRate, int defense, int attack) : base(name, defense, attack) { TotalEnergy = 10; RegenRate = regenRate; }
+        public Player(string name, int regenRate, int defense, int attack, ILogger logger) : base(name, defense, attack, logger, (ConsoleColor.Green, 'O')) { TotalEnergy = 10; RegenRate = regenRate; }
 
         public override int attack(IActor target, string attackMessage)
         {
@@ -50,6 +50,7 @@ namespace MegaDeathMountain
         public void Defend()
         {
             this.Defending = true;
+            UILineManager.PrintLine(this.Name + Dialogue.Instance.getRandomDefendMsg());
         }
 
         public void makeCamp()
@@ -92,12 +93,12 @@ namespace MegaDeathMountain
                     Console.Clear();
 
                     // clears console buffer
-                    Game.clearConsoleBuffer();
+                    UILineManager.clearConsoleBuffer();
 
                     UILineManager.PrintLine("\n\nYou Wake up feeling rested and ready for battle!");
                     CurrentHealth += lifeGain;
                     UILineManager.PrintLine($"\nNew Health: {CurrentHealth}  Gained {lifeGain}!");
-                    CurrentEnergy += energyLost;
+                    CurrentEnergy = CurrentEnergy + energyLost;
                     UILineManager.PrintLine($"New Energy: {CurrentEnergy}  Lost {energyLost}...");
                     return;
                 }

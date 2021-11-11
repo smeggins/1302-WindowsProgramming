@@ -15,11 +15,16 @@ namespace MegaDeathMountain
         public void specialAttack(IActor target);
         public bool dodge(int attack);
         public void missAttack(string missMessage);
+        public (ConsoleColor color, char symbol) LayoutGraphic();
     }
 
     public abstract class Actor : IActor
     {
         protected Random _RNG = new Random();
+        protected ILogger Logger;
+        (int X, int Y) LayoutPosition;
+        (ConsoleColor color, char Symbol) LayoutGraphic;
+
         public string Name;
         public int Defence;
         public int Attack;
@@ -45,7 +50,7 @@ namespace MegaDeathMountain
                 }
             } 
         }
-        public Actor(string Name, int defense, int attack, int totalHealth = 100)
+        public Actor(string Name, int defense, int attack, ILogger logger, (ConsoleColor color, char Symbol) layoutGraphic, int totalHealth = 100)
         {
             this.Name = Name;
             Defence = defense;
@@ -54,6 +59,8 @@ namespace MegaDeathMountain
             TotalHealth = totalHealth;
             CurrentHealth = TotalHealth;
             Defending = false;
+            this.Logger = logger;
+            this.LayoutGraphic = layoutGraphic;
         }
 
         public abstract int attack(IActor target, string attackMessage);
@@ -61,7 +68,7 @@ namespace MegaDeathMountain
         public bool dodge(int attack)
         {
             int rn = _RNG.Next(1, 100);
-            int ActiveDefence = (Defending) ? Defence * 2 : Defence;
+            int ActiveDefence = (this.Defending) ? Defence * 2 : Defence;
 
             if (attack != (this.Attack * 2))
             {
@@ -90,6 +97,11 @@ namespace MegaDeathMountain
         public void missAttack(string missMessage)
         {
             UILineManager.PrintLine(Name + missMessage);
+        }
+
+        (ConsoleColor color, char symbol) IActor.LayoutGraphic()
+        {
+            return this.LayoutGraphic;
         }
     }
 }

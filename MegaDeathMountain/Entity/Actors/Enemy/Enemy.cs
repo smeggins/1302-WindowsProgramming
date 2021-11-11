@@ -8,19 +8,19 @@ namespace MegaDeathMountain
 {
     public abstract class Enemy : Actor
     {
-        public bool WaitingToAttack = false;
-        public Enemy(string name, int defense, int attack, int health) : base(name, defense, attack, health) {  }
+        public bool ChargingSpecialAttack = false;
+        public Enemy(string name, int defense, int attack, ILogger logger,(ConsoleColor color, char Symbol) layoutGraphic, int health) : base(name, defense, attack, logger, layoutGraphic, health) {  }
 
         public abstract List<string> Image();
 
         public override int attack(IActor target, string attackMessage)
         {
-            if (WaitingToAttack == false)
+            if (ChargingSpecialAttack == false)
             {
                 if (_RNG.Next(1, 10) > 3)
                 {
                     UILineManager.PrintLine(Name + "Begins charging for a powerful attack");
-                    WaitingToAttack = true;
+                    ChargingSpecialAttack = true;
                     return 0;
                 }
                 else

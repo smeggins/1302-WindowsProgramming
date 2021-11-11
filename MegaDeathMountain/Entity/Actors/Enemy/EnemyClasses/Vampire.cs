@@ -8,7 +8,7 @@ namespace MegaDeathMountain
 {
     class Vampire : Enemy
     {
-        public Vampire(string name, int playerLevel) : base(name, creationDefense(playerLevel, 3), creationAttack(playerLevel, 3), creationHealth(playerLevel)) { }
+        public Vampire(string name, int playerLevel, ILogger logger) : base(name, creationDefense(playerLevel, 3), creationAttack(playerLevel, 3), logger, (ConsoleColor.Red, 'V'), creationHealth(playerLevel)) { }
 
         public override List<string> Image()
         {
@@ -17,8 +17,16 @@ namespace MegaDeathMountain
 
         public override void specialAttack(IActor target)
         {
-            UILineManager.PrintLine("\nThe Vampire appears behind you an sinks its teeth deep in your neck!");
-            target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
+            if (target.dodge(Attack) == false)
+            {
+                target.missAttack(Dialogue.Instance.getRandomMissMsg());
+                return;
+            }
+            else
+            {
+                UILineManager.PrintLine("\nThe Vampire appears behind you an sinks its teeth deep in your neck!");
+                target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
+            }
         }
     }
 }

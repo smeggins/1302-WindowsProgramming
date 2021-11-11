@@ -8,7 +8,7 @@ namespace MegaDeathMountain
 {
     class Demon : Enemy
     {
-        public Demon(string name, int playerLevel) : base(name, creationDefense(playerLevel, 2), creationAttack(playerLevel, 2), creationHealth(playerLevel)) { }
+        public Demon(string name, int playerLevel, ILogger logger) : base(name, creationDefense(playerLevel, 2), creationAttack(playerLevel, 2), logger, (ConsoleColor.Red, 'D'), creationHealth(playerLevel)) { }
 
         public override List<string> Image()
         {
@@ -17,8 +17,16 @@ namespace MegaDeathMountain
 
         public override void specialAttack(IActor target)
         {
-            UILineManager.PrintLine("\nThe demon rears back, and begins an all out frenzied attack");
-            target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
+            if (target.dodge(Attack) == false)
+            {
+                target.missAttack(Dialogue.Instance.getRandomMissMsg());
+                return;
+            }
+            else
+            {
+                UILineManager.PrintLine("\nThe demon rears back, and begins an all out frenzied attack");
+                target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
+            }
         }
     }
 }

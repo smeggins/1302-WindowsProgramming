@@ -9,7 +9,7 @@ namespace MegaDeathMountain
 {
     //TODO Add intro to battles
     // make alternate character types
-    // add logger implementation
+    // add Logger implementation
     // add intro screen
     // add exit screen
 
@@ -48,60 +48,65 @@ namespace MegaDeathMountain
     /// </summary>
     class Game
     {
-
-        bool debugMode = false;
-        ILogger logger = new ConsoleLogger();
+        public static bool debugMode = true;
+        ILogger Logger = new ConsoleLogger();
 
         private void attackLoop(Player player1, Enemy Enemy)
         {
             int round = 1;
-            Console.Clear();
-            BattleUI.drawBattle(round, player1, Enemy);
-            waitForEnter();
-            Console.Clear();
+            
             while ((player1.CurrentHealth > 0 && Enemy.CurrentHealth > 0))
             {
                 Console.Clear();
-                UILineManager.PrintLine($"\n{player1.Name} health: {player1.CurrentHealth}");
-                UILineManager.PrintLine($"Enemy health: {Enemy.CurrentHealth}\n");
+                BattleUI.drawBattle(round, player1, Enemy);
+                ConsoleKey SelectedOption;
 
-                player1.attack(Enemy, Dialogue.Instance.getRandomAttackMsg());
+                UILineManager.clearConsoleBuffer();
+                if (player1.CurrentEnergy == 10)
+                {
+                    SelectedOption = UILineManager.waitForKeys(new ConsoleKey[] { ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3 });
+                }
+                else
+                {
+                    SelectedOption = UILineManager.waitForKeys(new ConsoleKey[] { ConsoleKey.D1, ConsoleKey.D2 });
+                }
+                Console.Clear();
+                
+                if (SelectedOption == ConsoleKey.D1)
+                {
+                    player1.attack(Enemy, Dialogue.Instance.getRandomAttackMsg());
+                }
+                else if (SelectedOption == ConsoleKey.D2)
+                {
+                    player1.Defend();
+                }
+                else if (SelectedOption == ConsoleKey.D3)
+                {
+                    player1.specialAttack(Enemy);
+                }
 
                 if (Enemy.CurrentHealth > 0)
                 {
-                    if (Enemy.WaitingToAttack == false)
+                    if (Enemy.ChargingSpecialAttack == false)
                     {
                         Enemy.attack(player1, Dialogue.Instance.getRandomAttackMsg());
                     }
                     else
                     {
                         Enemy.specialAttack(player1);
-                        Enemy.WaitingToAttack = false;
+                        Enemy.ChargingSpecialAttack = false;
                     }
                 }
                 UILineManager.PrintLine($"\nEnd of round {round}\n\n");
                 round++;
-                waitForEnter();
+                Logger.logDebugInformation($"\nPlayer defence:        {player1.Defence}, " +
+                                           $"\nPlayer is Defending: {player1.Defending}");
+                player1.Defending = false;
+                UILineManager.waitForEnter();
             }
         }
 
-        public static void clearConsoleBuffer()
-        {
-            while (Console.KeyAvailable)
-                Console.ReadKey(false);
-        }
-
-        public static void waitForEnter()
-        {
-            UILineManager.PrintLine("\nPress Enter To Continue:");
-            while (true)
-            {
-                if (Console.ReadKey(true).Key == ConsoleKey.Enter)
-                {
-                    break;
-                }
-            }
-        }
+        
 
         private void cheat(Player player, string cheatkey)
         {
@@ -128,55 +133,60 @@ namespace MegaDeathMountain
                 vampirePriority = vampirePriority * playerLevel;
                 demonPriority = demonPriority * playerLevel;
             }
-            if (this.debugMode == true)
-            {
-                logger.logDebugInformation(($"\n\n---------------------\nEnemy ChooseEnemy: {rng}\n" +
-                    $"impPriority: {(((100 - cryptLordPriority - vampirePriority - demonPriority) > 0) ? 100 - cryptLordPriority - vampirePriority - demonPriority : 0)}\n" +
-                    $"demonPriority: {demonPriority}\n" +
-                    $"vampirePriority: {vampirePriority}\n" +
-                    $"cryptLordPriority: {cryptLordPriority}\n" +
-                    $"---------------------\n\n"));
-            }
-
+            
+            Logger.logDebugInformation(($"\n\n---------------------\nEnemy ChooseEnemy: {rng}\n" +
+                $"impPriority: {(((100 - cryptLordPriority - vampirePriority - demonPriority) > 0) ? 100 - cryptLordPriority - vampirePriority - demonPriority : 0)}\n" +
+                $"demonPriority: {demonPriority}\n" +
+                $"vampirePriority: {vampirePriority}\n" +
+                $"cryptLordPriority: {cryptLordPriority}\n" +
+                $"---------------------\n\n"));
+            
             if (rng < cryptLordPriority)
             {
-                return new CryptLord("Crypt Lord", playerLevel);
+                return new CryptLord("Crypt Lord", playerLevel, Logger);
             }
             else if (rng < vampirePriority)
             {
-                return new Vampire("Vampire", playerLevel);
+                return new Vampire("Vampire", playerLevel, Logger);
             }
             else if (rng < demonPriority)
             {
-                return new Demon("Demon", playerLevel);
+                return new Demon("Demon", playerLevel, Logger);
             }
             else
             {
-                return new Imp("Imp", playerLevel);
+                return new Imp("Imp", playerLevel, Logger);
             }
         }
 
         public void start()
         {
+
             UILineManager.PrintChars("What is your Name: ");
             Knight player1;
             try
             {
-                player1 = new Knight(Console.ReadLine()); cheat(player1, "p");
+                player1 = new Knight(Console.ReadLine(), Logger); cheat(player1, "p");
             }
             catch (Exception ex)
             {
-                logger.logException("Exception assigning player name.", ex);
+                Logger.logException("Exception assigning player name.", ex);
                 throw new ArgumentException();
             }
 
             Enemy Enemy;
 
             Console.Clear();
+            Position position = new Position();
+            position.Layout[2][4] = player1;
+            BattleUI.DrawBattleField(position.Layout);
+            UILineManager.waitForEnter();
+
+            Console.Clear();
             UILineManager.PrintLine("You arrive in the desolate, uforgiving mega death mountain." +
                 "\nOnly the strongest can reach the top." +
                 "\nGood luck...");
-            waitForEnter();
+            UILineManager.waitForEnter();
             int levels = 0;
 
             
@@ -194,14 +204,14 @@ namespace MegaDeathMountain
                     UILineManager.PrintLine($"Health: {player1.CurrentHealth}");
                     UILineManager.PrintLine($"Energy: {player1.CurrentEnergy}");
                     player1.makeCamp();
-                    waitForEnter();
+                    UILineManager.waitForEnter();
                     player1.level();
-                    waitForEnter();
+                    UILineManager.waitForEnter();
                 }
                 else
                 {
                     UILineManager.PrintLine("You had a good run, maybe next time you'll conquer MEGA DEATH MOUNTAIN!");
-                    waitForEnter();
+                    UILineManager.waitForEnter();
                     break;
                 }
                 levels++;
