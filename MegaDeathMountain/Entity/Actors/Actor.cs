@@ -22,8 +22,8 @@ namespace MegaDeathMountain
     {
         protected Random _RNG = new Random();
         protected ILogger Logger;
-        (int X, int Y) LayoutPosition;
-        (ConsoleColor color, char Symbol) LayoutGraphic;
+        public (int X, int Y) LayoutPosition;
+        public (ConsoleColor color, char Symbol) LayoutGraphic;
 
         public string Name;
         public int Defence;

@@ -10,6 +10,7 @@ namespace MegaDeathMountain
     public abstract class Player : Actor
     {
         public int TotalEnergy;
+        public PlayerClass Class;
         public int RegenRate;
         private int currentEnergy;
         public int CurrentEnergy
@@ -28,7 +29,7 @@ namespace MegaDeathMountain
             }
         }
 
-        public Player(string name, int regenRate, int defense, int attack, ILogger logger) : base(name, defense, attack, logger, (ConsoleColor.Green, 'O')) { TotalEnergy = 10; RegenRate = regenRate; }
+        public Player(string name, int regenRate, int defense, int attack, ILogger logger, PlayerClass playerClass) : base(name, defense, attack, logger, (ConsoleColor.Green, 'O')) { TotalEnergy = 10; RegenRate = regenRate; }
 
         public override int attack(IActor target, string attackMessage)
         {
@@ -136,11 +137,13 @@ namespace MegaDeathMountain
             }
             UILineManager.DrawMenuLine();
         }
+
+        
     }
 }
-enum PlayerClass
+public enum PlayerClass
 {
-    Beast,
     Knight,
+    Beast,
     Priest
 }

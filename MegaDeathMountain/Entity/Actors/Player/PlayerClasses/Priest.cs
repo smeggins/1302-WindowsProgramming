@@ -19,7 +19,7 @@ namespace MegaDeathMountain
     /// </summary>
     public class Priest : Player
     {
-        public Priest(string name, ILogger logger) : base(name, 12, 15, 7, logger) {  }
+        public Priest(string name, ILogger logger) : base(name, 12, 15, 7, logger, PlayerClass.Priest) {  }
 
         public override void specialAttack(IActor target)
         {

@@ -28,10 +28,11 @@ namespace MegaDeathMountain
 
         public virtual void logDebugInformation(string message)
         {
-            if (Game.debugMode == true)
+            if (Processor.debugMode == true)
             {
                 var msg = String.Format("Log debug Information: {0}", message);
                 write(msg);
+                UILineManager.waitForEnter();
             }
         }
 
@@ -67,7 +68,7 @@ namespace MegaDeathMountain
 
         public override void logDebugInformation(string message)
         {
-            if (Game.debugMode == true)
+            if (Processor.debugMode == true)
             {
                 var msg = String.Format("Log debug Information: {0}", message);
                 write(msg, rootPath + informationPath + "debugLog.txt");
@@ -87,7 +88,7 @@ namespace MegaDeathMountain
         protected override void write(string message, string fileLocation = "")
         {
             Console.WriteLine(message);
-            UILineManager.waitForEnter();
+            //UILineManager.waitForEnter();
         }
     }
 }

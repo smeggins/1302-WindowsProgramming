@@ -7,7 +7,7 @@ namespace MegaDeathMountain
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
+            Processor game = new Processor();
             game.start();
         }
     }

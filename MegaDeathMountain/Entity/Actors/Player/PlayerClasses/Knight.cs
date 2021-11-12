@@ -19,7 +19,7 @@ namespace MegaDeathMountain
     /// </summary>
     public class Knight : Player
     {
-        public Knight(string name, ILogger logger) : base(name, 24, 20, 10, logger) {  }
+        public Knight(string name, ILogger logger) : base(name, 24, 20, 10, logger, PlayerClass.Knight) {  }
 
         public override void specialAttack(IActor target)
         {
