@@ -30,6 +30,7 @@ namespace MegaDeathMountain
                 {
                     return (newPosition.x, newPosition.y - loop);
                 }
+                loop++;
             }
         }
 
@@ -79,6 +80,17 @@ namespace MegaDeathMountain
             }
 
             return returnPosition;
+        }
+
+        public void ResetLayout()
+        {
+            for (int i = 0; i < Layout.Length; i++)
+            {
+                for (int j = 0; j < Layout[0].Length; j++)
+                {
+                    Layout[i][j] = null;
+                }
+            }
         }
 
         public (int x, int y) UpdatePosition(Actor actor, (int x, int y) newPosition)

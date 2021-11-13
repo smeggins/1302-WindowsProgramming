@@ -31,6 +31,11 @@ namespace MegaDeathMountain
 
         public Player(string name, int regenRate, int defense, int attack, ILogger logger, PlayerClass playerClass) : base(name, defense, attack, logger, (ConsoleColor.Green, 'O')) { TotalEnergy = 10; RegenRate = regenRate; }
 
+        public override void die(string deathMessage)
+        {
+            UILineManager.PrintLine(this.Name + deathMessage);
+        }
+
         public override int attack(IActor target, string attackMessage)
         {
             UILineManager.PrintLine(Name + attackMessage);

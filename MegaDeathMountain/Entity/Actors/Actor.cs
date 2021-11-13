@@ -81,10 +81,7 @@ namespace MegaDeathMountain
         }
 
 
-        public void die(string deathMessage)
-        {
-            UILineManager.PrintLine(this.Name + deathMessage);
-        }
+        public abstract void die(string deathMessage);
 
         public abstract void specialAttack(IActor target);
 

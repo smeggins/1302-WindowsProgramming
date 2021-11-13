@@ -20,14 +20,25 @@ namespace MegaDeathMountain
     {
         public static bool debugMode = false;
         ILogger Logger;
-        Position position;
-        Player Player;
-        List<Enemy> Enemies;
+        Random randomizer;
+
+        private static Position position;
+        public static Player Player;
+        public static List<Enemy> Enemies;
 
         public Processor()
         {
             Logger = new ConsoleLogger();
             position = new Position(Logger);
+            randomizer = new Random();
+            Enemies = new List<Enemy>();
+        }
+
+        public static void WhipeEnemyFromExistence(Enemy enemy)
+        {
+            Processor.position.Layout[enemy.LayoutPosition.X][enemy.LayoutPosition.Y] = null;
+            Enemies.Remove(enemy);
+            // Brutal ;)
         }
 
         private void attackLoop(Player Player, Enemy Enemy)
@@ -184,15 +195,62 @@ namespace MegaDeathMountain
                 {
                     if (Console.KeyAvailable == true)
                     {
-                        Processor.Key = Console.ReadKey(false).Key;
+                        Processor.Key = Console.ReadKey(true).Key;
                     }
                 }
             });
         }
 
+        private bool isAdjacent(Actor actor)
+        {
+            int X = actor.LayoutPosition.X;
+            int Y = actor.LayoutPosition.Y;
+
+            if ( ( (X + 1 == Player.LayoutPosition.X) || (X - 1 == Player.LayoutPosition.X) ) && (Y == Player.LayoutPosition.Y) )
+            {
+                return true;
+            }
+            else if (((Y + 1 == Player.LayoutPosition.Y) || (Y - 1 == Player.LayoutPosition.Y)) && (X == Player.LayoutPosition.X))
+            {
+                return true;
+            }            
+
+            return false;
+        }
+
+        private void FightNearest()
+        {
+            List<Enemy> CurrentEnemy = null;
+
+            foreach (var enemy in Enemies)
+            {
+                if (isAdjacent(enemy))
+                {
+                    if (CurrentEnemy == null)
+                    {
+                        CurrentEnemy = new List<Enemy>();
+                    }
+
+                    CurrentEnemy.Add(enemy);
+                }
+            }
+
+            if (CurrentEnemy != null && CurrentEnemy.Count != 0)
+            {
+                foreach (var enemy in CurrentEnemy)
+                {
+                    attackLoop(Player, enemy);
+                }
+            }
+        }
+
         public void BattleFieldController(IActor[][] layout)
         {
-            while (true)
+            RandomlyAssignActorPosition(Player);
+            RandomlyAssignActorPosition(Enemies);
+
+
+            while (Enemies.Count > 0 && Player.CurrentHealth > 0)
             {
                 UILineManager.ClearScreen();
                 BattleUI.DrawBattleField(layout);
@@ -217,6 +275,48 @@ namespace MegaDeathMountain
                         position.UpdatePosition(Player, (X + 1, Y));
                         break;
                 }
+                Key = ConsoleKey.F1;
+
+                FightNearest();
+            }
+
+            position.ResetLayout();
+        }
+
+        private void RandomlyAssignActorPosition(Actor actor)
+        {
+            //TODO could be refactored to be more efficient
+            (int X, int Y)? NewPosition = null;
+            int X = 0;
+            int Y = 0;
+
+            while (NewPosition == null || position.Layout[X][Y] != null) 
+            {
+                X = randomizer.Next(0, position.Layout.Length-1);
+                Y = randomizer.Next(0, position.Layout[0].Length-1);
+                NewPosition = (X, Y);
+            }
+            actor.LayoutPosition = (X, Y);
+            position.Layout[X][Y] = actor;
+        }
+
+        private void RandomlyAssignActorPosition(List<Enemy> actors)
+        {
+            //TODO could be refactored to be more efficient
+            foreach (var actor in actors)
+            {
+                (int X, int Y)? NewPosition = null;
+                int X = 0;
+                int Y = 0;
+
+                while (NewPosition == null || position.Layout[X][Y] != null)
+                {
+                    X = randomizer.Next(0, position.Layout.Length - 1);
+                    Y = randomizer.Next(0, position.Layout[0].Length - 1);
+                    NewPosition = (X, Y);
+                }
+                actor.LayoutPosition = (X, Y);
+                position.Layout[X][Y] = actor;
             }
         }
 
@@ -227,25 +327,26 @@ namespace MegaDeathMountain
             
             CreateCharacter();
 
-            position.Layout[2][4] = Player;
-            Player.LayoutPosition = (2, 4);
-            BattleFieldController(position.Layout);
-            UILineManager.waitForEnter();
-
             UILineManager.ClearScreen();
             UILineManager.PrintLine("You arrive in the desolate, uforgiving mega death mountain." +
                 "\nOnly the strongest can reach the top." +
                 "\nGood luck...");
             UILineManager.waitForEnter();
+
             int levels = 0;
 
-
-            Enemy Enemy;
             while (levels < 9)
             {
-                Enemy = chooseEnemy(Player.Level, new Random());
-                UILineManager.PrintLine($"As you walk around the bend,{Enemy.Name} Appears in front of you, blocking your way.");
-                attackLoop(Player, Enemy);
+                for (int i = 0; i < randomizer.Next(1, 3); i++)
+                {
+                    Enemies.Add(chooseEnemy(Player.Level, new Random()));
+                }
+
+                UILineManager.SkipLine(4);
+                UILineManager.PrintLine($"As you walk around the bend, Enemies appear in front of you, blocking your way.");
+                UILineManager.waitForEnter();
+
+                BattleFieldController(position.Layout);
 
                 if (Player.CurrentHealth > 0)
                 {

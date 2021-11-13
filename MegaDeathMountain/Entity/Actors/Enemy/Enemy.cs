@@ -12,6 +12,11 @@ namespace MegaDeathMountain
         public Enemy(string name, int defense, int attack, ILogger logger,(ConsoleColor color, char Symbol) layoutGraphic, int health) : base(name, defense, attack, logger, layoutGraphic, health) {  }
 
         public abstract List<string> Image();
+        public override void die(string deathMessage)
+        {
+            UILineManager.PrintLine(this.Name + deathMessage);
+            Processor.WhipeEnemyFromExistence(this);
+        }
 
         public override int attack(IActor target, string attackMessage)
         {
