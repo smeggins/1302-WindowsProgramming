@@ -19,9 +19,23 @@ namespace MegaDeathMountain
                     if (Console.KeyAvailable == true)
                     {
                         KeyLogger.Key = Console.ReadKey(true).Key;
+                        CheckForCriticalTasks();
                     }
                 }
             });
+        }
+
+        public static void CheckForCriticalTasks()
+        {
+            ExitOnESCAsync();
+        }
+
+        private static void ExitOnESCAsync()
+        {
+            if (KeyLogger.Key == ConsoleKey.Escape)
+            {
+                Processor.ExitGame();
+            }
         }
     }
 }

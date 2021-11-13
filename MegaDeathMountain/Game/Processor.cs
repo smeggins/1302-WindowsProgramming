@@ -20,7 +20,6 @@ namespace MegaDeathMountain
     {
         public static bool debugMode = false;
         private ILogger Logger;
-        private Random randomizer;
         private BattleField BattleField;
 
         public static ConsoleKey Key;
@@ -33,10 +32,9 @@ namespace MegaDeathMountain
         {
             Logger = new ConsoleLogger();
             position = new Position(Logger);
-            randomizer = new Random();
             Enemies = new List<Actor>();
             NPCs = new List<Actor>();
-            BattleField = new BattleField(Logger, randomizer);
+            BattleField = new BattleField(Logger);
         }
 
         public static void WipeEnemyFromExistence(Enemy enemy)
@@ -62,9 +60,9 @@ namespace MegaDeathMountain
             }
         }
 
-        private Enemy chooseEnemy(int playerLevel, Random RNG)
+        private Enemy chooseEnemy(int playerLevel)
         {
-            int rng = RNG.Next(0, 100);
+            int rng = Randomizer.Instance.RandomNumber(0, 100);
 
             //level 1 spawn priority
             int demonPriority = 8;
@@ -103,23 +101,9 @@ namespace MegaDeathMountain
             }
         }
 
-        private void ExitGame()
+        public static void ExitGame()
         {
             Environment.Exit(0);
-        }
-
-        public void ExitOnESCAsync()
-        {
-            Task task =  Task.Run(() =>
-            {
-                while(true)
-                {
-                    if(KeyLogger.Key == ConsoleKey.Escape)
-                    {
-                        ExitGame();
-                    }
-                }
-            });
         }
 
         public void CreateCharacter()
@@ -133,23 +117,22 @@ namespace MegaDeathMountain
 
         private async Task GenerateRandomNumberOfNPCs(int maxNumberToAdd)
         {
-            for (int i = 0; i < randomizer.Next(1, maxNumberToAdd); i++)
+            for (int i = 0; i < Randomizer.Instance.RandomNumber(1, maxNumberToAdd); i++)
             {
                 NPCs.Add(new NPC(Logger));
             }
         }
         private async Task GenerateRandomNumberOfEnemies(int maxNumberToAdd)
         {
-            for (int i = 0; i < randomizer.Next(1, maxNumberToAdd); i++)
+            for (int i = 0; i < Randomizer.Instance.RandomNumber(1, maxNumberToAdd); i++)
             {
-                Enemies.Add(chooseEnemy(Player.Level, randomizer));
+                Enemies.Add(chooseEnemy(Player.Level));
             }
         }
 
         public async Task start()
         {
             KeyLogger.UpdateKeyAsync();
-            ExitOnESCAsync();
             
             CreateCharacter(); cheat(Player, "p");
 
@@ -173,7 +156,7 @@ namespace MegaDeathMountain
                 await enemygen;
                 await NPCgen;
 
-                BattleField.Controller(position.Layout);
+                await BattleField.Controller(position.Layout);
 
                 if (Player.CurrentHealth > 0)
                 {

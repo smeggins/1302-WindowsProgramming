@@ -9,12 +9,10 @@ namespace MegaDeathMountain
     public class BattleField
     {
         ILogger Logger;
-        Random Randomizer;
 
-        public BattleField(ILogger logger, Random randomizer)
+        public BattleField(ILogger logger)
         {
             Logger = logger;
-            Randomizer = randomizer;
         }
 
         private bool PositionIsolated(IActor[][] layout, int x, int y)
@@ -68,8 +66,8 @@ namespace MegaDeathMountain
 
             while (Isolated == false)
             {
-                X = Randomizer.Next(0, layout.Length - 1);
-                Y = Randomizer.Next(0, layout[0].Length - 1);
+                X = Randomizer.Instance.RandomNumber(0, layout.Length - 1);
+                Y = Randomizer.Instance.RandomNumber(0, layout[0].Length - 1);
                 Isolated = PositionIsolated(layout, X, Y);
             }
             actor.LayoutPosition = (X, Y);
