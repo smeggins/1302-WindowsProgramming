@@ -1,14 +1,15 @@
 ﻿using System;
 using MegaDeathMountain;
+using System.Threading.Tasks;
 
 namespace MegaDeathMountain
 {
     class Run
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Processor game = new Processor();
-            game.start();
+            await game.start();
         }
     }
 }
