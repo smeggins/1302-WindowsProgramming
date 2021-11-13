@@ -23,9 +23,12 @@ namespace MegaDeathMountain
 
         public override void specialAttack(IActor target)
         {
-            UILineManager.PrintLine("Get absolutely fuckerd");
-            target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
-            this.CurrentEnergy = 0;
+            int Heal = (TotalHealth / RegenRate) * 4;
+            UILineManager.PrintLine("A bright light emits from the priests staff!");
+            UILineManager.PrintLine($"You gained {Heal} health");
+
+            target.takeDamage( ( (int)(this.Attack * 1.5) ), " feels excrusiating pain when caught in the light from the priests staff" );
+            Processor.Player.CurrentEnergy = 0;
         }
     }
 }

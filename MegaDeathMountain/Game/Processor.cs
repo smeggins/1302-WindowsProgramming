@@ -24,20 +24,28 @@ namespace MegaDeathMountain
 
         private static Position position;
         public static Player Player;
-        public static List<Enemy> Enemies;
+        public static List<Actor> Enemies;
+        public static List<Actor> NPCs;
 
         public Processor()
         {
             Logger = new ConsoleLogger();
             position = new Position(Logger);
             randomizer = new Random();
-            Enemies = new List<Enemy>();
+            Enemies = new List<Actor>();
+            NPCs = new List<Actor>();
         }
 
-        public static void WhipeEnemyFromExistence(Enemy enemy)
+        public static void WipeEnemyFromExistence(Enemy enemy)
         {
             Processor.position.Layout[enemy.LayoutPosition.X][enemy.LayoutPosition.Y] = null;
             Enemies.Remove(enemy);
+            // Brutal ;)
+        }
+        public static void WipeNPCFromExistence(NPC npc)
+        {
+            Processor.position.Layout[npc.LayoutPosition.X][npc.LayoutPosition.Y] = null;
+            NPCs.Remove(npc);
             // Brutal ;)
         }
 
@@ -205,22 +213,23 @@ namespace MegaDeathMountain
         {
             int X = actor.LayoutPosition.X;
             int Y = actor.LayoutPosition.Y;
+            bool adj = false;
 
             if ( ( (X + 1 == Player.LayoutPosition.X) || (X - 1 == Player.LayoutPosition.X) ) && (Y == Player.LayoutPosition.Y) )
             {
-                return true;
+                adj = true;
             }
             else if (((Y + 1 == Player.LayoutPosition.Y) || (Y - 1 == Player.LayoutPosition.Y)) && (X == Player.LayoutPosition.X))
             {
-                return true;
+                adj = true;
             }            
 
-            return false;
+            return adj;
         }
 
         private void FightNearest()
         {
-            List<Enemy> CurrentEnemy = null;
+            List<Actor> CurrentEnemy = null;
 
             foreach (var enemy in Enemies)
             {
@@ -228,7 +237,7 @@ namespace MegaDeathMountain
                 {
                     if (CurrentEnemy == null)
                     {
-                        CurrentEnemy = new List<Enemy>();
+                        CurrentEnemy = new List<Actor>();
                     }
 
                     CurrentEnemy.Add(enemy);
@@ -237,9 +246,37 @@ namespace MegaDeathMountain
 
             if (CurrentEnemy != null && CurrentEnemy.Count != 0)
             {
+                BattleUI.DrawBattleField(Processor.position.Layout);
                 foreach (var enemy in CurrentEnemy)
                 {
-                    attackLoop(Player, enemy);
+                    attackLoop(Player, (Enemy)enemy);
+                }
+            }
+        }
+
+        private void RescueNearest()
+        {
+            List<Actor> NPCsRescued = null;
+
+            foreach (var NPC in NPCs)
+            {
+                if (isAdjacent(NPC))
+                {
+                    if (NPCsRescued == null)
+                    {
+                        NPCsRescued = new List<Actor>();
+                    }
+
+                    NPCsRescued.Add(NPC);
+                }
+            }
+
+            if (NPCsRescued != null && NPCsRescued.Count != 0)
+            {
+                BattleUI.DrawBattleField(Processor.position.Layout);
+                foreach (NPC NPC in NPCsRescued)
+                {
+                    NPC.Rescued($"{NPC.Name} Was rescued! They want to repay the favor");
                 }
             }
         }
@@ -248,13 +285,13 @@ namespace MegaDeathMountain
         {
             RandomlyAssignActorPosition(Player);
             RandomlyAssignActorPosition(Enemies);
+            RandomlyAssignActorPosition(NPCs);
 
 
             while (Enemies.Count > 0 && Player.CurrentHealth > 0)
             {
-                UILineManager.ClearScreen();
                 BattleUI.DrawBattleField(layout);
-                UILineManager.PrintLine("\nTo move use your arrow keys");
+                UILineManager.PrintLine("To move use your arrow keys");
                 ConsoleKey key = UILineManager.waitForKeys(new ConsoleKey[] { ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, });
 
                 int X = Player.LayoutPosition.X;
@@ -276,47 +313,93 @@ namespace MegaDeathMountain
                         break;
                 }
                 Key = ConsoleKey.F1;
-
+                
+                RescueNearest();
                 FightNearest();
             }
 
             position.ResetLayout();
         }
 
+        private bool PositionIsolated(int x, int y)
+        {
+            
+            if (position.Layout[x][y] != null)
+            {
+                return false;
+            }
+            
+            if ((x + 1) <= position.Layout.Length - 1 && (x + 1) >= 0)
+            {
+                if (position.Layout[x + 1][y] != null)
+                {
+                    return false;
+                }
+            }
+            
+            if ((x - 1) <= position.Layout.Length - 1 && (x - 1) >= 0)
+            {
+                if (position.Layout[x - 1][y] != null)
+                {
+                    return false;
+                }
+            }
+            
+            if ((y + 1) <= position.Layout[0].Length - 1 && (y + 1) >= 0)
+            {
+                if (position.Layout[x][y + 1] != null)
+                {
+                    return false;
+                }
+            }
+            
+            if ((y - 1) <= position.Layout[0].Length - 1 && (y - 1) >= 0)
+            {
+                if (position.Layout[x][y - 1] != null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private void RandomlyAssignActorPosition(Actor actor)
         {
-            //TODO could be refactored to be more efficient
-            (int X, int Y)? NewPosition = null;
             int X = 0;
             int Y = 0;
+            bool Isolated = false;
 
-            while (NewPosition == null || position.Layout[X][Y] != null) 
+            while (Isolated == false) 
             {
                 X = randomizer.Next(0, position.Layout.Length-1);
                 Y = randomizer.Next(0, position.Layout[0].Length-1);
-                NewPosition = (X, Y);
+                Isolated = PositionIsolated(X, Y);
             }
             actor.LayoutPosition = (X, Y);
             position.Layout[X][Y] = actor;
         }
 
-        private void RandomlyAssignActorPosition(List<Enemy> actors)
+        private void RandomlyAssignActorPosition(List<Actor> actors)
         {
-            //TODO could be refactored to be more efficient
             foreach (var actor in actors)
             {
-                (int X, int Y)? NewPosition = null;
-                int X = 0;
-                int Y = 0;
+                RandomlyAssignActorPosition(actor);
+            }
+        }
 
-                while (NewPosition == null || position.Layout[X][Y] != null)
-                {
-                    X = randomizer.Next(0, position.Layout.Length - 1);
-                    Y = randomizer.Next(0, position.Layout[0].Length - 1);
-                    NewPosition = (X, Y);
-                }
-                actor.LayoutPosition = (X, Y);
-                position.Layout[X][Y] = actor;
+        private void GenerateRandomNumberOfNPCs(int maxNumberToAdd)
+        {
+            for (int i = 0; i < randomizer.Next(1, maxNumberToAdd); i++)
+            {
+                NPCs.Add(new NPC(Logger));
+            }
+        }
+        private void GenerateRandomNumberOfEnemies(int maxNumberToAdd)
+        {
+            for (int i = 0; i < randomizer.Next(1, maxNumberToAdd); i++)
+            {
+                Enemies.Add(chooseEnemy(Player.Level, randomizer));
             }
         }
 
@@ -325,7 +408,7 @@ namespace MegaDeathMountain
             UpdateKeyAsync();
             ExitOnESCAsync();
             
-            CreateCharacter();
+            CreateCharacter(); cheat(Player, "p");
 
             UILineManager.ClearScreen();
             UILineManager.PrintLine("You arrive in the desolate, uforgiving mega death mountain." +
@@ -337,10 +420,8 @@ namespace MegaDeathMountain
 
             while (levels < 9)
             {
-                for (int i = 0; i < randomizer.Next(1, 3); i++)
-                {
-                    Enemies.Add(chooseEnemy(Player.Level, new Random()));
-                }
+                GenerateRandomNumberOfEnemies(3);
+                GenerateRandomNumberOfNPCs(3);
 
                 UILineManager.SkipLine(4);
                 UILineManager.PrintLine($"As you walk around the bend, Enemies appear in front of you, blocking your way.");

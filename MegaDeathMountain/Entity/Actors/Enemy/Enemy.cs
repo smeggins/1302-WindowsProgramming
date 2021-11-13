@@ -15,7 +15,7 @@ namespace MegaDeathMountain
         public override void die(string deathMessage)
         {
             UILineManager.PrintLine(this.Name + deathMessage);
-            Processor.WhipeEnemyFromExistence(this);
+            Processor.WipeEnemyFromExistence(this);
         }
 
         public override int attack(IActor target, string attackMessage)

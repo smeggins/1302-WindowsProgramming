@@ -23,9 +23,9 @@ namespace MegaDeathMountain
 
         public override void specialAttack(IActor target)
         {
-            UILineManager.PrintLine("Get absolutely fuckerd");
-            target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
-            this.CurrentEnergy = 0;
+            UILineManager.PrintLine("The Knights Sword Glows With A Holy Light");
+            target.takeDamage(this.Attack * 3, " is engulfed in holy flame as the knights sword makes contact");
+            Processor.Player.CurrentEnergy = 0;
         }
     }
 }

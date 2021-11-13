@@ -23,9 +23,15 @@ namespace MegaDeathMountain
 
         public override void specialAttack(IActor target)
         {
-            UILineManager.PrintLine("Get absolutely fuckerd");
-            target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
-            this.CurrentEnergy = 0;
+            UILineManager.PrintLine("The beast leaps into the enemy, slicing wildly");
+            this.Attack = Attack / 2;
+            for (int i = 0; i < 3; i++)
+            {
+                attack(target, " slashes in a FURY");
+            }
+            this.Attack = Attack * 2;
+            target.takeDamage(this.Attack, " is covered in wounds from the vicious attack");
+            Processor.Player.CurrentEnergy = Processor.Player.CurrentEnergy / 2;
         }
     }
 }

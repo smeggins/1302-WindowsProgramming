@@ -9,18 +9,19 @@ namespace MegaDeathMountain
 {
     public abstract class Player : Actor
     {
-        public int TotalEnergy;
+        public double TotalEnergy;
         public PlayerClass Class;
         public int RegenRate;
-        private int currentEnergy;
-        public int CurrentEnergy
+        private int EnergyRegainedPerHit = 2;
+        private double currentEnergy;
+        public double CurrentEnergy
         {
             get { return currentEnergy; }
             set
             {
-                if ((currentEnergy + value) > 0)
+                if (value > 0)
                 {
-                    currentEnergy = ((currentEnergy + value) < TotalEnergy) ? (currentEnergy + value) : TotalEnergy;
+                    currentEnergy = (value < TotalEnergy) ? value : TotalEnergy;
                 }
                 else
                 {
@@ -46,7 +47,7 @@ namespace MegaDeathMountain
             }
             else
             {
-                CurrentEnergy += 1;
+                CurrentEnergy += EnergyRegainedPerHit;
                 target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
                 return Attack;
             }
@@ -65,7 +66,7 @@ namespace MegaDeathMountain
             if (this.CurrentHealth != this.TotalHealth)
             {
                 UILineManager.PrintLine("How many Hours Would you Like to Rest: (0-24)");
-                UILineManager.PrintLine("24 hours fully heals you from 1 health, energy depletes while resting.\n\n");
+                UILineManager.PrintLine("The longer you rest the more health you recover and energy you lose.\n\n");
 
                 UILineManager.PrintChars("How many Hours Would you Like to Rest (0-24): ");
                 int restTime;
@@ -82,20 +83,28 @@ namespace MegaDeathMountain
                 if (restTime > 0)
                 {
                     int lifeGain = (TotalHealth / RegenRate) * restTime;
-                    int energyLost = (TotalEnergy / 24) * restTime;
+                    int energyLost = (int)((TotalEnergy / 12) * restTime);
 
                     UILineManager.PrintLine($"Ok, you rest for {restTime} hours.");
                     Thread.Sleep(1000);
                     Console.Clear();
                     UILineManager.PrintChars("                   ");
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < 3; i++)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(500);
                         UILineManager.PrintChars("Z");
                     }
-                    Thread.Sleep(1000);
-                    UILineManager.PrintChars("z");
-                    Thread.Sleep(1000);
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Thread.Sleep(500);
+                        UILineManager.PrintChars("z");
+                    }
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Thread.Sleep(500);
+                        UILineManager.PrintChars(".");
+                    }
+                    Thread.Sleep(500);
                     Console.Clear();
 
                     // clears console buffer
@@ -104,13 +113,14 @@ namespace MegaDeathMountain
                     UILineManager.PrintLine("\n\nYou Wake up feeling rested and ready for battle!");
                     CurrentHealth += lifeGain;
                     UILineManager.PrintLine($"\nNew Health: {CurrentHealth}  Gained {lifeGain}!");
-                    CurrentEnergy = CurrentEnergy + energyLost;
+                    CurrentEnergy = CurrentEnergy - energyLost;
                     UILineManager.PrintLine($"New Energy: {CurrentEnergy}  Lost {energyLost}...");
                     return;
                 }
                 else
                 {
                     UILineManager.PrintLine($"Rest is for the Weak. Onwards and upwards!");
+                    return;
                 }
             }
             
