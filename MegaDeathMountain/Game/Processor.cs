@@ -115,19 +115,26 @@ namespace MegaDeathMountain
             UILineManager.ClearScreen();
         }
 
-        private async Task GenerateRandomNumberOfNPCs(int maxNumberToAdd)
+        private Task GenerateRandomNumberOfNPCs(int maxNumberToAdd)
         {
-            for (int i = 0; i < Randomizer.Instance.RandomNumber(1, maxNumberToAdd); i++)
+            return Task.Run(() =>
             {
-                NPCs.Add(new NPC(Logger));
-            }
+                for (int i = 0; i < Randomizer.Instance.RandomNumber(1, maxNumberToAdd); i++)
+                {
+                    NPCs.Add(new NPC(Logger));
+                }
+            });
         }
-        private async Task GenerateRandomNumberOfEnemies(int maxNumberToAdd)
+        private Task GenerateRandomNumberOfEnemies(int maxNumberToAdd)
         {
-            for (int i = 0; i < Randomizer.Instance.RandomNumber(1, maxNumberToAdd); i++)
+            return Task.Run(() =>
             {
-                Enemies.Add(chooseEnemy(Player.Level));
-            }
+                for (int i = 0; i < Randomizer.Instance.RandomNumber(1, maxNumberToAdd); i++)
+                {
+                    Enemies.Add(chooseEnemy(Player.Level));
+                }
+            });
+            
         }
 
         public async Task start()

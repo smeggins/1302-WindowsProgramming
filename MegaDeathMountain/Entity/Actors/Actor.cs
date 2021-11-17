@@ -87,9 +87,10 @@ namespace MegaDeathMountain
 
         public virtual void takeDamage(int damage, string damageMessage)
         {
+            int damageTaken = _RNG.Next(damage - 3, damage + 2);
             UILineManager.PrintLine($"\n\n{Name}{damageMessage}");
-            UILineManager.PrintLine($"{damage} damage\n\n");
-            this.CurrentHealth -= damage;
+            UILineManager.PrintLine($"{damageTaken} damage\n\n");
+            this.CurrentHealth -= damageTaken;
         }
         public void missAttack(string missMessage)
         {

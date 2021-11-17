@@ -26,6 +26,7 @@ namespace MegaDeathMountain
                 {
                     UILineManager.PrintLine(Name + "Begins charging for a powerful attack");
                     ChargingSpecialAttack = true;
+                    
                     return 0;
                 }
                 else
@@ -35,16 +36,18 @@ namespace MegaDeathMountain
                     if (target.dodge(Attack) == false)
                     {
                         target.missAttack(Dialogue.Instance.getRandomMissMsg());
+                        
                         return 0;
                     }
                     else
                     {
                         target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
-
                     }
+                    
                     return Attack;
                 }
             }
+            
             return 0;
         }
 
