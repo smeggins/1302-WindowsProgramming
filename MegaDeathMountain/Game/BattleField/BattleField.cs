@@ -100,7 +100,7 @@ namespace MegaDeathMountain
             return adj;
         }
 
-        private async Task<List<Actor>> AllAdjacentActors(Actor primaryActor, List<Actor> checkedActors)
+        private List<Actor> AllAdjacentActors(Actor primaryActor, List<Actor> checkedActors)
         {
             List<Actor> AdjacentActors = null;
 
@@ -121,7 +121,7 @@ namespace MegaDeathMountain
 
         private void Fight(Player player, List<Actor> EnemiesFought)
         {
-            if(EnemiesFought != null && EnemiesFought.Count != 0)
+            if (EnemiesFought != null && EnemiesFought.Count != 0)
             {
                 BattleUI.DrawBattleField(Processor.position.Layout);
                 foreach (var enemy in EnemiesFought)
@@ -131,11 +131,32 @@ namespace MegaDeathMountain
             }
         }
 
-        private async Task FightNearest(Player player, List<Actor> enemies)
+
+        private void Murder(Enemy enemy, List<Actor> AdjacentNPCs)
         {
-            Fight(player, await AllAdjacentActors(player, enemies));
+            if (AdjacentNPCs != null && AdjacentNPCs.Count != 0)
+            {
+                BattleUI.DrawBattleField(Processor.position.Layout);
+                foreach (NPC npc in AdjacentNPCs)
+                {
+                    npc.die($"{npc.Name} has been brutally murdered by a terrifying {enemy.Name}!");
+                }
+                BattleUI.DrawBattleField(Processor.position.Layout);
+            }
         }
-        
+
+        private void FightAdjacent(Player player, List<Actor> enemies)
+        {
+            if (enemies.Count > 0)
+                Fight(player, AllAdjacentActors(player, enemies));
+        }
+
+        private void KillAdjacent(Enemy enemy, List<Actor> npcs)
+        {
+            if (npcs.Count > 0)
+                Murder(enemy, AllAdjacentActors(enemy, npcs));
+        }
+
         private void Rescue(List<Actor> NPCsRescued)
         {
             if (NPCsRescued != null && NPCsRescued.Count != 0)
@@ -147,9 +168,10 @@ namespace MegaDeathMountain
                 }
             }
         }
-        private async Task RescueNearest(Player player, List<Actor> npcs)
+        private void RescueNearest(Player player, List<Actor> npcs)
         {
-            Rescue(await AllAdjacentActors(player, npcs));
+            if (npcs.Count > 0)
+                Rescue(AllAdjacentActors(player, npcs));
         }
 
         private void attackLoop(Player Player, Enemy Enemy)
@@ -207,7 +229,115 @@ namespace MegaDeathMountain
             }
         }
 
-        public async Task Controller(IActor[][] layout)
+        public void movePlayerOnBattleField()
+        {
+            ConsoleKey key = UILineManager.waitForKeys(new ConsoleKey[] { ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, });
+
+            int X = Processor.Player.LayoutPosition.X;
+            int Y = Processor.Player.LayoutPosition.Y;
+            Logger.logDebugInformation($"BattleFieldController(): ConsoleKey key = UILineManager.waitForKeys = {key}");
+            switch (key)
+            {
+                case ConsoleKey.UpArrow:
+                    Processor.position.UpdatePosition(Processor.Player, (X, Y + 1));
+                    break;
+                case ConsoleKey.DownArrow:
+                    Processor.position.UpdatePosition(Processor.Player, (X, Y - 1));
+                    break;
+                case ConsoleKey.LeftArrow:
+                    Processor.position.UpdatePosition(Processor.Player, (X - 1, Y));
+                    break;
+                case ConsoleKey.RightArrow:
+                    Processor.position.UpdatePosition(Processor.Player, (X + 1, Y));
+                    break;
+            }
+            KeyLogger.Key = ConsoleKey.F1;
+        }
+
+        private int Square(int num) => num * num;
+
+        private int GetDistanceSquared((int X, int Y) position1, (int X, int Y) position2) =>
+            Square(position1.X - position2.X) + Square(position1.Y - position2.Y);
+
+        public Actor findNearestActorToActor(Actor primaryActor, List<Actor> searchActors)
+        {
+            (int X, int Y) CurrentPosition = primaryActor.LayoutPosition;
+            Actor ClosestActor = searchActors[0];
+            int ClosestPositionDistanceSquared = GetDistanceSquared(CurrentPosition, searchActors.First().LayoutPosition);
+
+            foreach (Actor actor in searchActors.Skip(1))
+            {
+                int DistanceSquared = GetDistanceSquared(CurrentPosition, actor.LayoutPosition);
+                if (DistanceSquared < ClosestPositionDistanceSquared)
+                {
+                    ClosestPositionDistanceSquared = DistanceSquared;
+                    ClosestActor = actor;
+                }
+            }
+
+            return ClosestActor;
+        }
+
+        private void MoveActorTowardsClosestActor(Actor primary, Actor target, int spacesToMove = 1)
+        {
+            int EXAbs = (int)MathF.Abs(primary.LayoutPosition.X);
+            int EYAbs = (int)MathF.Abs(primary.LayoutPosition.Y);
+            int NXAbs = (int)MathF.Abs(target.LayoutPosition.X);
+            int NYAbs = (int)MathF.Abs(target.LayoutPosition.Y);
+            
+            if (MathF.Abs(EXAbs - NXAbs) > MathF.Abs(EYAbs - NYAbs))
+            {
+                if (target.LayoutPosition.X > primary.LayoutPosition.X)
+                {
+                    Processor.position.move(primary, spacesToMove, 0);
+                }
+                else
+                {
+                    Processor.position.move(primary, -spacesToMove, 0);
+                }
+            }
+            else
+            {
+                if (target.LayoutPosition.Y > primary.LayoutPosition.Y)
+                {
+                    Processor.position.move(primary, 0, spacesToMove);
+                }
+                else
+                {
+                    Processor.position.move(primary, 0, -spacesToMove);
+                }
+            }
+        }
+
+        private void NPCMovementOnBattleField()
+        {   
+            ///for each npc
+            ///     
+            ///     move one random space 10% chance no move
+            ///     if adjacent to enemy die
+            ///     if adjacent to player rescued
+            ///     move one random space 30% chance no move
+
+            foreach (Enemy enemy in Processor.Enemies)
+            {
+                if (Processor.NPCs.Count > 0) 
+                {
+                    Actor ClosestNPC = findNearestActorToActor(enemy, Processor.NPCs);
+                    MoveActorTowardsClosestActor(enemy, ClosestNPC);
+                    KillAdjacent(enemy, new List<Actor>() { ClosestNPC });
+                }
+                else
+                {
+                    MoveActorTowardsClosestActor(enemy, Processor.Player);
+                }
+
+            }
+
+            FightAdjacent(Processor.Player, Processor.Enemies);
+
+        }
+
+        public void Controller(IActor[][] layout)
         {
             RandomlyAssignActorPosition(Processor.Player, Processor.position.Layout);
             RandomlyAssignActorPosition(Processor.Enemies, Processor.position.Layout);
@@ -218,33 +348,15 @@ namespace MegaDeathMountain
             {
                 BattleUI.DrawBattleField(layout);
                 UILineManager.PrintLine("To move use your arrow keys");
-                ConsoleKey key = UILineManager.waitForKeys(new ConsoleKey[] { ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, });
 
-                int X = Processor.Player.LayoutPosition.X;
-                int Y = Processor.Player.LayoutPosition.Y;
-                Logger.logDebugInformation($"BattleFieldController(): ConsoleKey key = UILineManager.waitForKeys = {key}");
-                switch (key)
-                {
-                    case ConsoleKey.UpArrow:
-                        Processor.position.UpdatePosition(Processor.Player, (X, Y + 1));
-                        break;
-                    case ConsoleKey.DownArrow:
-                        Processor.position.UpdatePosition(Processor.Player, (X, Y - 1));
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        Processor.position.UpdatePosition(Processor.Player, (X - 1, Y));
-                        break;
-                    case ConsoleKey.RightArrow:
-                        Processor.position.UpdatePosition(Processor.Player, (X + 1, Y));
-                        break;
-                }
-                KeyLogger.Key = ConsoleKey.F1;
+                movePlayerOnBattleField();
 
-                Task Rescuing = RescueNearest(Processor.Player, Processor.NPCs);
-                Task Fighting = FightNearest(Processor.Player, Processor.Enemies);
+                RescueNearest(Processor.Player, Processor.NPCs);
+                FightAdjacent(Processor.Player, Processor.Enemies);
 
-                await Rescuing;
-                await Fighting;
+                
+                NPCMovementOnBattleField();
+                
             }
 
             Processor.position.ResetLayout();

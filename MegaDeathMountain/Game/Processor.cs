@@ -163,7 +163,7 @@ namespace MegaDeathMountain
                 await enemygen;
                 await NPCgen;
 
-                await BattleField.Controller(position.Layout);
+                BattleField.Controller(position.Layout);
 
                 if (Player.CurrentHealth > 0)
                 {

@@ -15,7 +15,7 @@ namespace MegaDeathMountain
             return 0;
         }
 
-        public override void die(string deathMessage)
+        public override void die(string deathMessage = "A civilian has been killed!")
         {
             UILineManager.PrintLine(deathMessage);
             Processor.WipeNPCFromExistence(this);
