@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Explorations.DesignPatterns.ex2
 {
-    class Personalustomer : ICustomer
+    class PersonalCustomer : ICustomer
     {
         public int yearJoined { get; set; }
         public CustomerType customerType { get; set; }

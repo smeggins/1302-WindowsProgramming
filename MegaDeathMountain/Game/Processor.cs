@@ -23,29 +23,48 @@ namespace MegaDeathMountain
         private BattleField BattleField;
 
         public static ConsoleKey Key;
-        public static Position position;
+        public static Position Position;
         public static Player Player;
         public static List<Actor> Enemies;
         public static List<Actor> NPCs;
 
         public Processor()
         {
-            Logger = new ConsoleLogger();
-            position = new Position(Logger);
-            Enemies = new List<Actor>();
-            NPCs = new List<Actor>();
-            BattleField = new BattleField(Logger);
+            this.Logger = new ConsoleLogger();
+            InstantiateProcessor();
+        }
+
+        private void InstantiateProcessor()
+        {
+            var PositionTask = Task.Run(() =>
+            {
+                Position = new Position(this.Logger);
+            });
+            var EnemiesTask = Task.Run(() =>
+            {
+                Enemies = new List<Actor>();
+            });
+            var NPCsTask = Task.Run(() =>
+            {
+                NPCs = new List<Actor>();
+            });
+            var BattleFieldTask = Task.Run(() =>
+            {
+                BattleField = new BattleField(this.Logger);
+            });
+
+            Task.WaitAll(PositionTask, EnemiesTask, NPCsTask, BattleFieldTask);
         }
 
         public static void WipeEnemyFromExistence(Enemy enemy)
         {
-            Processor.position.Layout[enemy.LayoutPosition.X][enemy.LayoutPosition.Y] = null;
+            Processor.Position.Layout[enemy.LayoutPosition.X][enemy.LayoutPosition.Y] = null;
             Enemies.Remove(enemy);
             // Brutal ;)
         }
         public static void WipeNPCFromExistence(NPC npc)
         {
-            Processor.position.Layout[npc.LayoutPosition.X][npc.LayoutPosition.Y] = null;
+            Processor.Position.Layout[npc.LayoutPosition.X][npc.LayoutPosition.Y] = null;
             NPCs.Remove(npc);
             // Brutal ;)
         }
@@ -76,7 +95,7 @@ namespace MegaDeathMountain
                 demonPriority = demonPriority * playerLevel;
             }
             
-            Logger.logDebugInformation(($"\n\n---------------------\nEnemy ChooseEnemy: {rng}\n" +
+            this.Logger.logDebugInformation(($"\n\n---------------------\nEnemy ChooseEnemy: {rng}\n" +
                 $"impPriority: {(((100 - cryptLordPriority - vampirePriority - demonPriority) > 0) ? 100 - cryptLordPriority - vampirePriority - demonPriority : 0)}\n" +
                 $"demonPriority: {demonPriority}\n" +
                 $"vampirePriority: {vampirePriority}\n" +
@@ -85,19 +104,19 @@ namespace MegaDeathMountain
             
             if (rng < cryptLordPriority)
             {
-                return new CryptLord("Crypt Lord", playerLevel, Logger);
+                return new CryptLord("Crypt Lord", playerLevel, this.Logger);
             }
             else if (rng < vampirePriority)
             {
-                return new Vampire("Vampire", playerLevel, Logger);
+                return new Vampire("Vampire", playerLevel, this.Logger);
             }
             else if (rng < demonPriority)
             {
-                return new Demon("Demon", playerLevel, Logger);
+                return new Demon("Demon", playerLevel, this.Logger);
             }
             else
             {
-                return new Imp("Imp", playerLevel, Logger);
+                return new Imp("Imp", playerLevel, this.Logger);
             }
         }
 
@@ -108,7 +127,7 @@ namespace MegaDeathMountain
 
         public void CreateCharacter()
         {
-            Player = PlayerCreator.BuildPlayer(Logger);
+            Player = PlayerCreator.BuildPlayer(this.Logger);
             UILineManager.ClearScreen();
             UILineManager.SkipLine(4);
             UILineManager.PrintLine($"You've chosen to play as a {Player.Class.ToString()} named {Player.Name}");
@@ -121,7 +140,7 @@ namespace MegaDeathMountain
             {
                 for (int i = 0; i < Randomizer.Instance.RandomNumber(1, maxNumberToAdd); i++)
                 {
-                    NPCs.Add(new NPC(Logger));
+                    NPCs.Add(new NPC(this.Logger));
                 }
             });
         }
@@ -160,10 +179,8 @@ namespace MegaDeathMountain
                 UILineManager.PrintLine($"As you walk around the bend, Enemies appear in front of you, blocking your way.");
                 UILineManager.waitForEnter();
 
-                await enemygen;
-                await NPCgen;
-
-                BattleField.Controller(position.Layout);
+                Task.WhenAll(enemygen, NPCgen);
+                BattleField.Controller(Position.Layout);
 
                 if (Player.CurrentHealth > 0)
                 {

@@ -26,7 +26,7 @@ namespace MegaDeathMountain
             }
         }
 
-        public int RandomNumber(int min, int max) { return RNG.Next(min, max); }
-        public int RandomNumber(int max) { return RNG.Next(max); }
+        public int RandomNumber(int min, int max) { return RNG.Next(min, max+1); }
+        public int RandomNumber(int max) { return RNG.Next(max+1); }
     }
 }

@@ -123,7 +123,7 @@ namespace MegaDeathMountain
         {
             if (EnemiesFought != null && EnemiesFought.Count != 0)
             {
-                BattleUI.DrawBattleField(Processor.position.Layout);
+                BattleUI.DrawBattleField(Processor.Position.Layout);
                 foreach (var enemy in EnemiesFought)
                 {
                     attackLoop(player, (Enemy)enemy);
@@ -136,12 +136,12 @@ namespace MegaDeathMountain
         {
             if (AdjacentNPCs != null && AdjacentNPCs.Count != 0)
             {
-                BattleUI.DrawBattleField(Processor.position.Layout);
+                BattleUI.DrawBattleField(Processor.Position.Layout);
                 foreach (NPC npc in AdjacentNPCs)
                 {
                     npc.die($"{npc.Name} has been brutally murdered by a terrifying {enemy.Name}!");
                 }
-                BattleUI.DrawBattleField(Processor.position.Layout);
+                BattleUI.DrawBattleField(Processor.Position.Layout);
             }
         }
 
@@ -161,14 +161,14 @@ namespace MegaDeathMountain
         {
             if (NPCsRescued != null && NPCsRescued.Count != 0)
             {
-                BattleUI.DrawBattleField(Processor.position.Layout);
+                BattleUI.DrawBattleField(Processor.Position.Layout);
                 foreach (NPC NPC in NPCsRescued)
                 {
                     NPC.Rescued($"{NPC.Name} Was rescued! They want to repay the favor");
                 }
             }
         }
-        private void RescueNearest(Player player, List<Actor> npcs)
+        private void RescueAdjacent(Player player, List<Actor> npcs)
         {
             if (npcs.Count > 0)
                 Rescue(AllAdjacentActors(player, npcs));
@@ -239,16 +239,16 @@ namespace MegaDeathMountain
             switch (key)
             {
                 case ConsoleKey.UpArrow:
-                    Processor.position.UpdatePosition(Processor.Player, (X, Y + 1));
+                    Processor.Position.UpdatePosition(Processor.Player, (X, Y + 1));
                     break;
                 case ConsoleKey.DownArrow:
-                    Processor.position.UpdatePosition(Processor.Player, (X, Y - 1));
+                    Processor.Position.UpdatePosition(Processor.Player, (X, Y - 1));
                     break;
                 case ConsoleKey.LeftArrow:
-                    Processor.position.UpdatePosition(Processor.Player, (X - 1, Y));
+                    Processor.Position.UpdatePosition(Processor.Player, (X - 1, Y));
                     break;
                 case ConsoleKey.RightArrow:
-                    Processor.position.UpdatePosition(Processor.Player, (X + 1, Y));
+                    Processor.Position.UpdatePosition(Processor.Player, (X + 1, Y));
                     break;
             }
             KeyLogger.Key = ConsoleKey.F1;
@@ -289,35 +289,46 @@ namespace MegaDeathMountain
             {
                 if (target.LayoutPosition.X > primary.LayoutPosition.X)
                 {
-                    Processor.position.move(primary, spacesToMove, 0);
+                    Processor.Position.move(primary, spacesToMove, 0);
                 }
                 else
                 {
-                    Processor.position.move(primary, -spacesToMove, 0);
+                    Processor.Position.move(primary, -spacesToMove, 0);
                 }
             }
             else
             {
                 if (target.LayoutPosition.Y > primary.LayoutPosition.Y)
                 {
-                    Processor.position.move(primary, 0, spacesToMove);
+                    Processor.Position.move(primary, 0, spacesToMove);
                 }
                 else
                 {
-                    Processor.position.move(primary, 0, -spacesToMove);
+                    Processor.Position.move(primary, 0, -spacesToMove);
                 }
             }
         }
 
-        private void NPCMovementOnBattleField()
-        {   
-            ///for each npc
-            ///     
-            ///     move one random space 10% chance no move
-            ///     if adjacent to enemy die
-            ///     if adjacent to player rescued
-            ///     move one random space 30% chance no move
+        private void MoveActorRandomly(Actor actor, int spacesToMove = 1)
+        {
+            bool moveOnXAxis = (Randomizer.Instance.RandomNumber(0, 1) == 0);
+            int modifyer = (Randomizer.Instance.RandomNumber(0, 1) == 0) ? (1 * spacesToMove) : (-1 * spacesToMove);
 
+            UILineManager.PrintLine($"move on axis: {moveOnXAxis}, modifier = : {modifyer}");
+            UILineManager.waitForEnter();
+
+            if (moveOnXAxis)
+            {
+                Processor.Position.move(actor, modifyer, 0);
+            }
+            else
+            {
+                Processor.Position.move(actor, 0, modifyer);
+            }
+        }
+
+        private void EnemyMovementOnBattleField()
+        {   
             foreach (Enemy enemy in Processor.Enemies)
             {
                 if (Processor.NPCs.Count > 0) 
@@ -330,18 +341,47 @@ namespace MegaDeathMountain
                 {
                     MoveActorTowardsClosestActor(enemy, Processor.Player);
                 }
-
             }
 
             FightAdjacent(Processor.Player, Processor.Enemies);
+        }
 
+        private void NPCMovementOnBattleField()
+        {
+            List<Actor> npcsToKill = new List<Actor>();
+
+            foreach (NPC npc in Processor.NPCs)
+            {
+                MoveActorRandomly(npc);
+
+                //if (Processor.Enemies.Count > 0)
+                //{
+                //    List<Actor> adjacentEnemies = AllAdjacentActors(npc, Processor.Enemies);
+
+                //    if (adjacentEnemies.Count > 0)
+                //    {
+                //        npcsToKill.Add(npc);
+                //        continue;
+                //    }
+                //}
+
+                //if (isAdjacent(Processor.Player, npc))
+                //{
+                //    npc.Rescued($"The civilian {npc.Name} is has made it to you and thus saftey. They'd like to repay the favor");
+                //}
+            }
+
+            foreach (NPC npc in npcsToKill)
+            {
+                npc.die();
+            }
         }
 
         public void Controller(IActor[][] layout)
         {
-            RandomlyAssignActorPosition(Processor.Player, Processor.position.Layout);
-            RandomlyAssignActorPosition(Processor.Enemies, Processor.position.Layout);
-            RandomlyAssignActorPosition(Processor.NPCs, Processor.position.Layout);
+            RandomlyAssignActorPosition(Processor.Player, Processor.Position.Layout);
+            RandomlyAssignActorPosition(Processor.Enemies, Processor.Position.Layout);
+            RandomlyAssignActorPosition(Processor.NPCs, Processor.Position.Layout);
 
 
             while (Processor.Enemies.Count > 0 && Processor.Player.CurrentHealth > 0)
@@ -351,15 +391,15 @@ namespace MegaDeathMountain
 
                 movePlayerOnBattleField();
 
-                RescueNearest(Processor.Player, Processor.NPCs);
+                RescueAdjacent(Processor.Player, Processor.NPCs);
                 FightAdjacent(Processor.Player, Processor.Enemies);
 
                 
+                EnemyMovementOnBattleField();
                 NPCMovementOnBattleField();
-                
             }
 
-            Processor.position.ResetLayout();
+            Processor.Position.ResetLayout();
         }
     }
 }

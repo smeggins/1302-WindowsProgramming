@@ -19,18 +19,35 @@ namespace MegaDeathMountain
 
         private (int x, int y) FindClosestUnusedSpot((int x, int y) currentPosition, (int x, int y) newPosition)
         {
-            int loop = 1;
-            while (true)
+            
+                int loop = 1;
+            try
             {
-                if (Layout[newPosition.x - loop][newPosition.y] == null)
+                while (true)
                 {
-                    return (newPosition.x - loop, newPosition.y);
+                    if (newPosition.x - loop > 0 && Layout[newPosition.x - loop][newPosition.y] == null)
+                    {
+                        return (newPosition.x - loop, newPosition.y);
+                    }
+                    else if (newPosition.y - loop > 0 && Layout[newPosition.x][newPosition.y - loop] == null)
+                    {
+                        return (newPosition.x, newPosition.y - loop);
+                    }
+                    else if (newPosition.x + loop > Layout.Length && Layout[newPosition.x + loop][newPosition.y] == null)
+                    {
+                        return (newPosition.x + loop, newPosition.y);
+                    }
+                    else if (newPosition.y + loop > Layout[0].Length && Layout[newPosition.x][newPosition.y + loop] == null)
+                    {
+                        return (newPosition.x, newPosition.y + loop);
+                    }
+                    loop++;
                 }
-                else if (Layout[newPosition.x][newPosition.y - loop] == null)
-                {
-                    return (newPosition.x, newPosition.y - loop);
-                }
-                loop++;
+            }
+            catch(Exception ex)
+            {
+                Logger.logException($"new position: {newPosition}, Loop value: {loop}", ex);
+                return newPosition;
             }
         }
 
