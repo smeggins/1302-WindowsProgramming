@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace MegaDeathMountain
 {
-    public static class KeyLogger
+    public class ConsoleKeyLogger : IKeyLogger
     {
-        public static ConsoleKey Key;
+        private ConsoleKey key;
+        public ConsoleKey Key {  get { return key; } set { key = value; }  }
 
-        public static void UpdateKeyAsync()
+        public virtual void UpdateKeyAsync(ConsoleKey key = ConsoleKey.F19)
         {
             Task UpdateKeyTask = Task.Run(() =>
             {
@@ -18,21 +20,21 @@ namespace MegaDeathMountain
                 {
                     if (Console.KeyAvailable == true)
                     {
-                        KeyLogger.Key = Console.ReadKey(true).Key;
+                        this.Key = Console.ReadKey(true).Key;
                         CheckForCriticalTasks();
                     }
                 }
             });
         }
 
-        public static void CheckForCriticalTasks()
+        public virtual void CheckForCriticalTasks()
         {
-            ExitOnESCAsync();
+            this.ExitOnESCAsync();
         }
 
-        private static void ExitOnESCAsync()
+        private void ExitOnESCAsync()
         {
-            if (KeyLogger.Key == ConsoleKey.Escape)
+            if (this.Key == ConsoleKey.Escape)
             {
                 Processor.ExitGame();
             }

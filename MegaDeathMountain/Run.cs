@@ -8,8 +8,8 @@ namespace MegaDeathMountain
     {
         static async Task Main(string[] args)
         {
-            Processor game = new Processor();
-            await game.start();
+            Processor game = new Processor(new ConsoleKeyLogger(), new ConsoleLogger());
+            await game.StartConsoleGame();
         }
     }
 }

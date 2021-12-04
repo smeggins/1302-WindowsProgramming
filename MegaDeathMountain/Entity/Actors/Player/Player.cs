@@ -51,7 +51,6 @@ namespace MegaDeathMountain
                 target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
                 return Attack;
             }
-
         }
 
         public void Defend()
@@ -155,10 +154,4 @@ namespace MegaDeathMountain
 
         
     }
-}
-public enum PlayerClass
-{
-    Knight,
-    Beast,
-    Priest
 }

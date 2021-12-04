@@ -58,7 +58,7 @@ namespace MegaDeathMountain
             return true;
         }
 
-        private void RandomlyAssignActorPosition(Actor actor, IActor[][] layout)
+        public void RandomlyAssignActorPosition(Actor actor, IActor[][] layout)
         {
             int X = 0;
             int Y = 0;
@@ -74,7 +74,7 @@ namespace MegaDeathMountain
             layout[X][Y] = actor;
         }
 
-        private void RandomlyAssignActorPosition(List<Actor> actors, IActor[][] layout)
+        public void RandomlyAssignActorPosition(List<Actor> actors, IActor[][] layout)
         {
             foreach (var actor in actors)
             {
@@ -231,27 +231,26 @@ namespace MegaDeathMountain
 
         public void movePlayerOnBattleField()
         {
-            ConsoleKey key = UILineManager.waitForKeys(new ConsoleKey[] { ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, });
-
+            ConsoleKey key = UILineManager.waitForKeys(new ConsoleKey[] { (ConsoleKey.UpArrow), (ConsoleKey.DownArrow), (ConsoleKey.LeftArrow), (ConsoleKey.RightArrow) });
             int X = Processor.Player.LayoutPosition.X;
             int Y = Processor.Player.LayoutPosition.Y;
             Logger.logDebugInformation($"BattleFieldController(): ConsoleKey key = UILineManager.waitForKeys = {key}");
             switch (key)
             {
-                case ConsoleKey.UpArrow:
+                case (ConsoleKey.UpArrow):
                     Processor.Position.UpdatePosition(Processor.Player, (X, Y + 1));
                     break;
-                case ConsoleKey.DownArrow:
+                case (ConsoleKey.DownArrow):
                     Processor.Position.UpdatePosition(Processor.Player, (X, Y - 1));
                     break;
-                case ConsoleKey.LeftArrow:
+                case (ConsoleKey.LeftArrow):
                     Processor.Position.UpdatePosition(Processor.Player, (X - 1, Y));
                     break;
-                case ConsoleKey.RightArrow:
+                case (ConsoleKey.RightArrow):
                     Processor.Position.UpdatePosition(Processor.Player, (X + 1, Y));
                     break;
             }
-            KeyLogger.Key = ConsoleKey.F1;
+            Processor.keyLogger.ClearKey();
         }
 
         private int Square(int num) => num * num;
@@ -313,9 +312,6 @@ namespace MegaDeathMountain
         {
             bool moveOnXAxis = (Randomizer.Instance.RandomNumber(0, 1) == 0);
             int modifyer = (Randomizer.Instance.RandomNumber(0, 1) == 0) ? (1 * spacesToMove) : (-1 * spacesToMove);
-
-            UILineManager.PrintLine($"move on axis: {moveOnXAxis}, modifier = : {modifyer}");
-            UILineManager.waitForEnter();
 
             if (moveOnXAxis)
             {

@@ -9,9 +9,13 @@ namespace MegaDeathMountain
     public static class PlayerCreator
     {
         private static string PlayerName;
-        private static ConsoleKey ClassChoice;
+        private static PlayerClass ClassChoice;
 
-        private static void RequestName(ILogger logger)
+        public static string GetValueString()
+        {
+            return $"PlayerName: {PlayerName}, ClassChoice: {ClassChoice}";
+        }
+        public static void RequestName(ILogger logger)
         {
             UILineManager.ClearScreen();
             UILineManager.SkipLine(4);
@@ -31,7 +35,26 @@ namespace MegaDeathMountain
             return;
         }
 
-        private static void RequestClass()
+        private static void ConsoleClassConversion(ConsoleKey key, ILogger logger)
+        {
+            switch (key)
+            {
+                case (ConsoleKey.D1):
+                    ClassChoice = PlayerClass.Knight;
+                    break;
+                case (ConsoleKey.D2):
+                    ClassChoice = PlayerClass.Beast;
+                    break;
+                case (ConsoleKey.D3):
+                    ClassChoice = PlayerClass.Priest;
+                    break;
+                default:
+                    logger.logException("Exception assigning player Class.", new ArgumentException());
+                    throw new ArgumentException();
+            }
+        }
+
+        public static void RequestClass(ILogger logger)
         {
             UILineManager.ClearScreen();
             UILineManager.SkipLine(4);
@@ -40,29 +63,40 @@ namespace MegaDeathMountain
             UILineManager.PrintLine("2 : Beast");
             UILineManager.PrintLine("3 : Priest");
 
-            PlayerCreator.ClassChoice =  UILineManager.waitForKeys(new ConsoleKey[]
+            ConsoleClassConversion(UILineManager.waitForKeys(new ConsoleKey[]
             {
                 ConsoleKey.D1,
                 ConsoleKey.D2,
                 ConsoleKey.D3
-            });
+            }), logger);
 
             return;
         }
 
+        public static void SetName(string name)
+        {
+            PlayerName = name;
+        }
+
+        public static void SetClass(PlayerClass playerClass)
+        {
+            ClassChoice = playerClass;
+        }
+
+        public static bool ReadyToBuild()
+        {
+            return (PlayerName != "" && ClassChoice != 0);
+        }
+
         public static Player BuildPlayer(ILogger logger)
         {
-
-            PlayerCreator.RequestName(logger);
-            PlayerCreator.RequestClass();
-
-            switch(ClassChoice)
+            switch (ClassChoice)
             {
-                case ConsoleKey.D1:
+                case (PlayerClass.Knight):
                     return new Knight(PlayerName, logger);
-                case ConsoleKey.D2:
+                case (PlayerClass.Beast):
                     return new Beast(PlayerName, logger);
-                case ConsoleKey.D3:
+                case (PlayerClass.Priest):
                     return new Priest(PlayerName, logger);
                 default:
                     logger.logException("Exception assigning player Class.", new ArgumentException());

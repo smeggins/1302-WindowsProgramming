@@ -19,18 +19,19 @@ namespace MegaDeathMountain
     public class Processor
     {
         public static bool debugMode = false;
-        private ILogger Logger;
-        private BattleField BattleField;
+        public ILogger Logger;
 
-        public static ConsoleKey Key;
+        public static IKeyLogger keyLogger;
+        public BattleField BattleField;
         public static Position Position;
         public static Player Player;
         public static List<Actor> Enemies;
         public static List<Actor> NPCs;
 
-        public Processor()
+        public Processor(IKeyLogger keylogger, ILogger logger)
         {
-            this.Logger = new ConsoleLogger();
+            this.Logger = logger;
+            Processor.keyLogger = keylogger;
             InstantiateProcessor();
         }
 
@@ -69,7 +70,7 @@ namespace MegaDeathMountain
             // Brutal ;)
         }
 
-        private void cheat(Player player, string cheatkey)
+        public void cheat(Player player, string cheatkey)
         {
             if(player.Name == cheatkey)
             {
@@ -127,6 +128,8 @@ namespace MegaDeathMountain
 
         public void CreateCharacter()
         {
+            PlayerCreator.RequestName(this.Logger);
+            PlayerCreator.RequestClass(this.Logger);
             Player = PlayerCreator.BuildPlayer(this.Logger);
             UILineManager.ClearScreen();
             UILineManager.SkipLine(4);
@@ -156,9 +159,17 @@ namespace MegaDeathMountain
             
         }
 
-        public async Task start()
+        public async Task GenerateEntities()
         {
-            KeyLogger.UpdateKeyAsync();
+            Task enemygen = GenerateRandomNumberOfEnemies(3);
+            Task NPCgen = GenerateRandomNumberOfNPCs(3);
+
+            await Task.WhenAll(enemygen, NPCgen);
+        }
+
+        public async Task StartConsoleGame()
+        {
+            keyLogger.UpdateKeyAsync();
             
             CreateCharacter(); cheat(Player, "p");
 
@@ -179,7 +190,7 @@ namespace MegaDeathMountain
                 UILineManager.PrintLine($"As you walk around the bend, Enemies appear in front of you, blocking your way.");
                 UILineManager.waitForEnter();
 
-                Task.WhenAll(enemygen, NPCgen);
+                await Task.WhenAll(enemygen, NPCgen);
                 BattleField.Controller(Position.Layout);
 
                 if (Player.CurrentHealth > 0)
@@ -205,5 +216,8 @@ namespace MegaDeathMountain
             UILineManager.ClearScreen();
             UILineManager.PrintLine("Thanks for playing");
         }
+
+        
+
     }
 }
