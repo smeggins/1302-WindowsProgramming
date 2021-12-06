@@ -52,9 +52,35 @@ namespace MegaDeathMountainShared
             game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.IntroPanel3, false });
         }
 
-        private void DrawFormsBattleField(IActor[][] layout)
+        private void DrawFormsBattleField(Game game, IActor[][] layout)
         {
-            
+            for (int y = 0; y < layout.Length; y++) 
+            {
+                for (int x = 0; x < layout.Length; x++)
+                {
+                    game.Invoke(Game.GridSquareDelegate, new object[] { game.BattleFieldCanvas, layout, (x, y) });
+                }
+            }
+        }
+
+        public static void DrawShowBoxIfMessageExists(string? message)
+        {
+            if (message is not null && message != "")
+            {
+                MessageBox.Show(message);
+            }
+        }
+
+        public static BattleField.Fight FormFightDelegate = new BattleField.Fight(FightTheFormEnemies);
+        private static void FightTheFormEnemies(Player player, List<Actor> EnemiesFought)
+        {
+            if (EnemiesFought != null && EnemiesFought.Count != 0)
+            {
+                foreach (var enemy in EnemiesFought)
+                {
+                    // add new attack method here
+                }
+            }
         }
 
         private void ManageBattlefield(Processor processor, Game game)
@@ -65,31 +91,43 @@ namespace MegaDeathMountainShared
             processor.BattleField.RandomlyAssignActorPosition(Processor.Enemies, Processor.Position.Layout);
             processor.BattleField.RandomlyAssignActorPosition(Processor.NPCs, Processor.Position.Layout);
 
+            DrawFormsBattleField(game, Processor.Position.Layout);
+
+            string UtilityMessage;
+            bool FoughtEnemies = false;
 
             while (Processor.Enemies.Count > 0 && Processor.Player.CurrentHealth > 0)
             {
-                    //BattleUI.DrawBattleField(layout);
-                //    UILineManager.PrintLine("To move use your arrow keys");
 
-                //    movePlayerOnBattleField();
+                processor.BattleField.movePlayerOnBattleField();
+                game.updateGridSquare();
 
-                //    RescueAdjacent(Processor.Player, Processor.NPCs);
-                //    FightAdjacent(Processor.Player, Processor.Enemies);
+                // Rescue NPCS
+                UtilityMessage = processor.BattleField.RescueAdjacent(Processor.Player, Processor.NPCs);
+
+                DrawShowBoxIfMessageExists(UtilityMessage);
+                UtilityMessage = "";
+                    
+                game.updateGridSquare();
+
+                // Fight Enemies
+                FoughtEnemies = processor.BattleField.FightAdjacent(FormFightDelegate, Processor.Player, Processor.Enemies);
+
+                game.updateGridSquare();
 
 
                 //    EnemyMovementOnBattleField();
                 //    NPCMovementOnBattleField();
             }
 
-        //Processor.Position.ResetLayout();
-    }
+            //Processor.Position.ResetLayout();
+        }
 
-        public Task StartFormGame(Game game)
+        public Task StartFormGame(Game game, Processor GameProcessor)
         {
             return Task.Run(async () =>
             {
                 //MessageBox.Show("Started the FormGame");
-                Processor GameProcessor = new Processor(new FormsKeyLogger(), new WriteLogger());
                 TitleScreen(game);
                 CharacterCreationScreen(game, GameProcessor.Logger);
                 Intro(game);
@@ -130,14 +168,6 @@ namespace MegaDeathMountainShared
             });
         }
 
-        //public void CreateGrid(object sender, EventArgs e)
-        //{
-        //    Button newButton = new Button();
-        //    this.Controls.Add(newButton);
-        //    newButton.Text = "Created Button";
-        //    newButton.Location = new Point(70, 70);
-        //    newButton.Size = new Size(50, 100);
-        //    newButton.Location = new Point(20, 50);
-        //}
+        
     }
 }

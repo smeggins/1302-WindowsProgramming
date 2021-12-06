@@ -13,9 +13,16 @@ namespace MegaDeathMountainShared
 {
     public partial class Game : Form
     {
+        private static PictureBox[][] BattleFieldZones;
+
         public Game()
         {
             InitializeComponent();
+            BattleFieldZones = new PictureBox[Processor.Position.Layout.Length][];
+            for (int i = 0; i < BattleFieldZones.Length; i++)
+            {
+                BattleFieldZones[i] = new PictureBox[Processor.Position.Layout[0].Length];
+            }
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -26,7 +33,6 @@ namespace MegaDeathMountainShared
             //CountdownToChangeLook.Start();
             FormsKeyLogger formsKeyLogger = (FormsKeyLogger)Processor.keyLogger;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(formsKeyLogger.Game_KeyDown);
-
         }
 
         public delegate void PanelVisibility(Panel panel, bool isVisible);
@@ -103,21 +109,84 @@ namespace MegaDeathMountainShared
             KnightSelectorImage.Refresh();
         }
 
-        private void label5_Click(object sender, EventArgs e)
+        private static (Color color, string imageLocation) ConvertConsoleSymbolToFormsGraphic(char symbol)
         {
-
+            //NOTE Was Originally going to keep the colored backgrounds but now I'm thinking i might leave them all transparent
+            // If i decide to keep it i will remove the Color part of this tuple in the future
+            switch (symbol)
+            {
+                case 'V':
+                    return (Color.Transparent, "../../../Resources/Vampire.gif");
+                case 'I':
+                    return (Color.Transparent, "../../../Resources/Imp.gif");
+                case 'C':
+                    return (Color.Transparent, "../../../Resources/CryptLord.gif");
+                case 'D':
+                    return (Color.Transparent, "../../../Resources/Demon.gif");
+                case '@':
+                    return (Color.Transparent, "../../../Resources/NPC.gif");
+                case 'O':
+                    return (Color.Transparent, "../../../Resources/Player.gif");
+                default:
+                    throw new ArgumentException("ConvertConsoleSymbolToFormsGraphic: Trying to Convert entity symbol to form graphic");
+            }
         }
 
-        private void label7_Click(object sender, EventArgs e)
+        private static int IndexInverter(int indexToInvert, int arrayLength)
         {
+            return (arrayLength - 1) - indexToInvert;
+        }
+       
+        public delegate void GridSquare(Panel battleFieldCanvas, IActor[][] layout, (int x, int y) position);
+        public static GridSquare GridSquareDelegate = new GridSquare(CreateGridSquare);
+        public static void CreateGridSquare(Panel battleFieldCanvas, IActor[][] layout, (int x, int y) position)
+        {
+            int XLength = layout.Length;
+            int YLength = layout[0].Length;
+            var Height = (battleFieldCanvas.Height / XLength);
+            var Width = (battleFieldCanvas.Width / YLength);
 
+            PictureBox newPB = new PictureBox();
+            battleFieldCanvas.Controls.Add(newPB);
+            newPB.BackColor = Color.Transparent;
+            newPB.Location = new Point(Width*(position.x), Height * IndexInverter(position.y, YLength));
+            newPB.Size = new Size(Width, Height);
+            newPB.BorderStyle = BorderStyle.FixedSingle;
+            newPB.SizeMode = PictureBoxSizeMode.StretchImage;
+            if (layout[position.x][position.y] is not null)
+            {
+                (Color color, string imageLocation) FormGraphic = ConvertConsoleSymbolToFormsGraphic(layout[position.x][position.y].LayoutGraphic().symbol);
+                newPB.BackColor = FormGraphic.color;
+                newPB.ImageLocation = FormGraphic.imageLocation;
+            }
+            BattleFieldZones[position.x][position.y] = (newPB);
+            //newPB.Refresh();
         }
 
-        private void CharacterSelectorPanel_Paint(object sender, PaintEventArgs e)
+        //public delegate void GridSquareUpdate();
+        //public static GridSquareUpdate GridSquareUpdateDelegate = new GridSquareUpdate(updateGridSquare);
+        public void updateGridSquare()
         {
-
+            for (int y = 0; y < Processor.Position.Layout.Length; y++)
+            {
+                for (int x = 0; x < Processor.Position.Layout.Length; x++)
+                {
+                    if (Processor.Position.Layout[x][y] is not null)
+                    {
+                        (Color color, string imageLocation) FormGraphic = ConvertConsoleSymbolToFormsGraphic(Processor.Position.Layout[x][y].LayoutGraphic().symbol);
+                        BattleFieldZones[x][y].BackColor = FormGraphic.color;
+                        BattleFieldZones[x][y].ImageLocation = FormGraphic.imageLocation;
+                    }
+                    else
+                    {
+                        if (BattleFieldZones[x][y].ImageLocation != "")
+                        {
+                            BattleFieldZones[x][y].ImageLocation = "";
+                            BattleFieldZones[x][y].BackColor = Color.Transparent;
+                        }
+                    }
+                }
+            }
         }
-        //////////////////////////////////////////END Selection Indication//////////////////////////////////////////
-
     }
 }

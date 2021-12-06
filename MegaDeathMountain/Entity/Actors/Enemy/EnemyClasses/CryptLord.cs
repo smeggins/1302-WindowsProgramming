@@ -8,7 +8,7 @@ namespace MegaDeathMountain
 {
     class CryptLord : Enemy
     {
-        public CryptLord(string name, int playerLevel, ILogger logger) : base(name, creationDefense(playerLevel, 5), creationAttack(playerLevel, 5), logger, (ConsoleColor.Red, 'V'), creationHealth(playerLevel)) { }
+        public CryptLord(string name, int playerLevel, ILogger logger) : base(name, creationDefense(playerLevel, 5), creationAttack(playerLevel, 5), logger, (ConsoleColor.Red, 'C'), creationHealth(playerLevel)) { }
 
         public override List<string> Image()
         {

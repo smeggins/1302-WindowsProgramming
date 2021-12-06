@@ -191,7 +191,7 @@ namespace MegaDeathMountain
                 UILineManager.waitForEnter();
 
                 await Task.WhenAll(enemygen, NPCgen);
-                BattleField.Controller(Position.Layout);
+                BattleField.Controller();
 
                 if (Player.CurrentHealth > 0)
                 {

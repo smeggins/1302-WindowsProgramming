@@ -41,6 +41,18 @@ namespace MegaDeathMountainShared
             }
         }
 
+        public static ConsoleKey waitForKeys(ConsoleKey[] consoleKey)
+        {
+            Processor.keyLogger.ClearKey();
+            while (true)
+            {
+                if (consoleKey.Contains(Processor.keyLogger.Key))
+                {
+                    return Processor.keyLogger.Key;
+                }
+            }
+        }
+
         public void CheckForCriticalTasks()
         {
             throw new NotImplementedException();

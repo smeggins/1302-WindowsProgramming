@@ -1,3 +1,7 @@
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.deps.json
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.runtimeconfig.json
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.runtimeconfig.dev.json
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.exe
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountainShared.exe
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountainShared.deps.json
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountainShared.runtimeconfig.json
@@ -5,7 +9,10 @@ S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\n
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountainShared.dll
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\ref\MegaDeathMountainShared.dll
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountainShared.pdb
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.dll
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.pdb
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.csproj.AssemblyReference.cache
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.Alert.resources
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.Game.resources
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.Properties.Resources.resources
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.csproj.GenerateResource.cache
@@ -13,15 +20,8 @@ S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\n
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.AssemblyInfoInputs.cache
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.AssemblyInfo.cs
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.csproj.CoreCompileInputs.cache
+S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.csproj.CopyComplete
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.dll
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\ref\MegaDeathMountainShared.dll
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.pdb
 S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.genruntimeconfig.cache
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.deps.json
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.runtimeconfig.json
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.runtimeconfig.dev.json
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.exe
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.dll
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\bin\Debug\net5.0-windows\MegaDeathMountain.pdb
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.csproj.CopyComplete
-S:\VCC\WindowsProgramming\WindowsProgramming\MegaDeathMountainShared\obj\Debug\net5.0-windows\MegaDeathMountainShared.Alert.resources

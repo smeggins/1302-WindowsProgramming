@@ -48,6 +48,7 @@ namespace MegaDeathMountainShared
             this.PriestSelectorImage = new System.Windows.Forms.PictureBox();
             this.KnightSelectorImage = new System.Windows.Forms.PictureBox();
             this.BattleFieldPanel = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
             this.BattleFieldCanvas = new System.Windows.Forms.Panel();
             this.IntroPanel1 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
@@ -268,6 +269,7 @@ namespace MegaDeathMountainShared
             // BattleFieldPanel
             // 
             this.BattleFieldPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BattleFieldPanel.BackgroundImage")));
+            this.BattleFieldPanel.Controls.Add(this.label8);
             this.BattleFieldPanel.Controls.Add(this.BattleFieldCanvas);
             this.BattleFieldPanel.Location = new System.Drawing.Point(0, 0);
             this.BattleFieldPanel.Name = "BattleFieldPanel";
@@ -275,8 +277,21 @@ namespace MegaDeathMountainShared
             this.BattleFieldPanel.TabIndex = 9;
             this.BattleFieldPanel.Visible = false;
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Font = new System.Drawing.Font("Showcard Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label8.Location = new System.Drawing.Point(186, 502);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(420, 44);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "Use Arrows To Move";
+            // 
             // BattleFieldCanvas
             // 
+            this.BattleFieldCanvas.BackColor = System.Drawing.Color.SandyBrown;
+            this.BattleFieldCanvas.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BattleFieldCanvas.BackgroundImage")));
             this.BattleFieldCanvas.Location = new System.Drawing.Point(39, 32);
             this.BattleFieldCanvas.Name = "BattleFieldCanvas";
             this.BattleFieldCanvas.Size = new System.Drawing.Size(712, 349);
@@ -303,7 +318,6 @@ namespace MegaDeathMountainShared
             this.label7.Size = new System.Drawing.Size(481, 50);
             this.label7.TabIndex = 2;
             this.label7.Text = "MEGA DEATH MOUNTAIN";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // label6
             // 
@@ -326,7 +340,6 @@ namespace MegaDeathMountainShared
             this.label5.Size = new System.Drawing.Size(540, 44);
             this.label5.TabIndex = 0;
             this.label5.Text = "You arrive at the desolate";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // IntroPanel2
             // 
@@ -395,6 +408,7 @@ namespace MegaDeathMountainShared
             ((System.ComponentModel.ISupportInitialize)(this.PriestSelectorImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.KnightSelectorImage)).EndInit();
             this.BattleFieldPanel.ResumeLayout(false);
+            this.BattleFieldPanel.PerformLayout();
             this.IntroPanel1.ResumeLayout(false);
             this.IntroPanel1.PerformLayout();
             this.IntroPanel2.ResumeLayout(false);
@@ -432,6 +446,7 @@ namespace MegaDeathMountainShared
         private Label IntroPanel3Label;
         public Panel BattleFieldPanel;
         public Panel BattleFieldCanvas;
+        private Label label8;
     }
 
 }

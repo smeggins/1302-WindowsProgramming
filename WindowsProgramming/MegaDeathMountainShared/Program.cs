@@ -19,10 +19,12 @@ namespace MegaDeathMountainShared
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            Processor GameProcessor = new Processor(new FormsKeyLogger(), new WriteLogger());
+            GameController Game = new GameController();
+
             Game GameCanvas = new Game();
 
-            GameController Game = new GameController();
-            Game.StartFormGame(GameCanvas);
+            Game.StartFormGame(GameCanvas, GameProcessor);
             Application.Run(GameCanvas);
 
             

@@ -33,7 +33,6 @@ namespace MegaDeathMountain
             }
             
             Processor.WipeNPCFromExistence(this);
-            UILineManager.waitForEnter();
         }
         
 

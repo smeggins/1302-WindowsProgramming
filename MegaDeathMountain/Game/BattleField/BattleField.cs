@@ -8,7 +8,7 @@ namespace MegaDeathMountain
 {
     public class BattleField
     {
-        ILogger Logger;
+        public static ILogger Logger;
 
         public BattleField(ILogger logger)
         {
@@ -119,11 +119,12 @@ namespace MegaDeathMountain
             return AdjacentActors;
         }
 
-        private void Fight(Player player, List<Actor> EnemiesFought)
+        public delegate void Fight(Player player, List<Actor> EnemiesFought);
+        public static Fight FightDelegate = new Fight(FightTheEnemies);
+        private static void FightTheEnemies(Player player, List<Actor> EnemiesFought)
         {
             if (EnemiesFought != null && EnemiesFought.Count != 0)
             {
-                BattleUI.DrawBattleField(Processor.Position.Layout);
                 foreach (var enemy in EnemiesFought)
                 {
                     attackLoop(player, (Enemy)enemy);
@@ -136,7 +137,6 @@ namespace MegaDeathMountain
         {
             if (AdjacentNPCs != null && AdjacentNPCs.Count != 0)
             {
-                BattleUI.DrawBattleField(Processor.Position.Layout);
                 foreach (NPC npc in AdjacentNPCs)
                 {
                     npc.die($"{npc.Name} has been brutally murdered by a terrifying {enemy.Name}!");
@@ -145,10 +145,17 @@ namespace MegaDeathMountain
             }
         }
 
-        private void FightAdjacent(Player player, List<Actor> enemies)
+        public bool FightAdjacent(Fight FightEnemies, Player player, List<Actor> enemies)
         {
+            bool FoughtEnemies = false;
+
             if (enemies.Count > 0)
-                Fight(player, AllAdjacentActors(player, enemies));
+            {
+                FightEnemies(player, AllAdjacentActors(player, enemies));
+                FoughtEnemies = true;
+            }
+
+            return FoughtEnemies;
         }
 
         private void KillAdjacent(Enemy enemy, List<Actor> npcs)
@@ -157,24 +164,51 @@ namespace MegaDeathMountain
                 Murder(enemy, AllAdjacentActors(enemy, npcs));
         }
 
-        private void Rescue(List<Actor> NPCsRescued)
+        private List<string> Rescue(List<Actor> NPCsRescued)
         {
+            List<string> NPCDisplayInfo = new List<string>();
             if (NPCsRescued != null && NPCsRescued.Count != 0)
             {
-                BattleUI.DrawBattleField(Processor.Position.Layout);
                 foreach (NPC NPC in NPCsRescued)
                 {
                     NPC.Rescued($"{NPC.Name} Was rescued! They want to repay the favor");
+                    NPCDisplayInfo.Add(NPC.Name);
                 }
             }
+            return NPCDisplayInfo;
         }
-        private void RescueAdjacent(Player player, List<Actor> npcs)
+        public String RescueAdjacent(Player player, List<Actor> npcs)
         {
+            StringBuilder FormShowBoxMessage = new StringBuilder();
+            string finalMessage = "was rescued! They want to repay the favor";
+            List<string> RescuedNPCNames = null;
             if (npcs.Count > 0)
-                Rescue(AllAdjacentActors(player, npcs));
+            {
+                RescuedNPCNames = Rescue(AllAdjacentActors(player, npcs));
+            }
+
+            if(RescuedNPCNames is not null && RescuedNPCNames.Count > 0)
+            {
+                if (RescuedNPCNames.Count == 1)
+                {
+                    FormShowBoxMessage.Append($"{RescuedNPCNames[0]} {finalMessage}");
+                }
+                else
+                {
+                    foreach (string npcName in RescuedNPCNames)
+                    {
+                        FormShowBoxMessage.Append($"{npcName},\n");
+                    }
+                    FormShowBoxMessage.Append($"{finalMessage}");
+                }
+                
+            }
+                
+
+            return FormShowBoxMessage.ToString();
         }
 
-        private void attackLoop(Player Player, Enemy Enemy)
+        private static void attackLoop(Player Player, Enemy Enemy)
         {
             int round = 1;
 
@@ -339,7 +373,7 @@ namespace MegaDeathMountain
                 }
             }
 
-            FightAdjacent(Processor.Player, Processor.Enemies);
+            FightAdjacent(FightDelegate, Processor.Player, Processor.Enemies);
         }
 
         private void NPCMovementOnBattleField()
@@ -373,26 +407,37 @@ namespace MegaDeathMountain
             }
         }
 
-        public void Controller(IActor[][] layout)
+        public void Controller()
         {
             RandomlyAssignActorPosition(Processor.Player, Processor.Position.Layout);
             RandomlyAssignActorPosition(Processor.Enemies, Processor.Position.Layout);
             RandomlyAssignActorPosition(Processor.NPCs, Processor.Position.Layout);
 
+            BattleUI.DrawBattleField(Processor.Position.Layout);
 
+            string RescueMessage;
+            bool FoughtEnemies;
             while (Processor.Enemies.Count > 0 && Processor.Player.CurrentHealth > 0)
             {
-                BattleUI.DrawBattleField(layout);
+                
                 UILineManager.PrintLine("To move use your arrow keys");
 
                 movePlayerOnBattleField();
+                BattleUI.DrawBattleField(Processor.Position.Layout);
 
-                RescueAdjacent(Processor.Player, Processor.NPCs);
-                FightAdjacent(Processor.Player, Processor.Enemies);
+                RescueMessage = RescueAdjacent(Processor.Player, Processor.NPCs);
+                FoughtEnemies = FightAdjacent(FightDelegate, Processor.Player, Processor.Enemies);
 
-                
+                if (RescueMessage != "" || FoughtEnemies == true)
+                {
+                    Console.WriteLine($"rescue message: [{RescueMessage}], foght enemies: {FoughtEnemies}");
+                    UILineManager.waitForEnter();
+                    BattleUI.DrawBattleField(Processor.Position.Layout);
+                }
+
                 EnemyMovementOnBattleField();
-                NPCMovementOnBattleField();
+                BattleUI.DrawBattleField(Processor.Position.Layout);
+                //NPCMovementOnBattleField(); // Causing issues and was not a pre-req so going to leave this feature out for now
             }
 
             Processor.Position.ResetLayout();
