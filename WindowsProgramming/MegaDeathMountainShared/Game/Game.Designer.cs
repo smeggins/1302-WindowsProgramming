@@ -58,6 +58,22 @@ namespace MegaDeathMountainShared
             this.IntroPanel2Label = new System.Windows.Forms.Label();
             this.IntroPanel3 = new System.Windows.Forms.Panel();
             this.IntroPanel3Label = new System.Windows.Forms.Label();
+            this.BattlePanel = new System.Windows.Forms.Panel();
+            this.BattleSpecialButton = new System.Windows.Forms.Button();
+            this.BattleDefendButton = new System.Windows.Forms.Button();
+            this.BattleAttackButton = new System.Windows.Forms.Button();
+            this.BattleWindowPanel = new System.Windows.Forms.Panel();
+            this.BattleWindowPlayerEnergy = new System.Windows.Forms.Label();
+            this.BattleWindowPELabel = new System.Windows.Forms.Label();
+            this.BattleWindowPlayerHealth = new System.Windows.Forms.Label();
+            this.BattleWindowPHLabel = new System.Windows.Forms.Label();
+            this.BattleWindowEnemyHealth = new System.Windows.Forms.Label();
+            this.BattleWindowEHLabel = new System.Windows.Forms.Label();
+            this.BattleWindowEnemyPictureBox = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.DiedPane = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.TitleScreenInitialPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -70,6 +86,11 @@ namespace MegaDeathMountainShared
             this.IntroPanel1.SuspendLayout();
             this.IntroPanel2.SuspendLayout();
             this.IntroPanel3.SuspendLayout();
+            this.BattlePanel.SuspendLayout();
+            this.BattleWindowPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BattleWindowEnemyPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            this.DiedPane.SuspendLayout();
             this.SuspendLayout();
             // 
             // TitleScreenInitialPanel
@@ -307,6 +328,7 @@ namespace MegaDeathMountainShared
             this.IntroPanel1.Name = "IntroPanel1";
             this.IntroPanel1.Size = new System.Drawing.Size(800, 600);
             this.IntroPanel1.TabIndex = 9;
+            this.IntroPanel1.Visible = false;
             // 
             // label7
             // 
@@ -383,17 +405,196 @@ namespace MegaDeathMountainShared
             this.IntroPanel3Label.TabIndex = 1;
             this.IntroPanel3Label.Text = "Good Luck...";
             // 
+            // BattlePanel
+            // 
+            this.BattlePanel.BackColor = System.Drawing.Color.Black;
+            this.BattlePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BattlePanel.BackgroundImage")));
+            this.BattlePanel.Controls.Add(this.BattleSpecialButton);
+            this.BattlePanel.Controls.Add(this.BattleDefendButton);
+            this.BattlePanel.Controls.Add(this.BattleAttackButton);
+            this.BattlePanel.Controls.Add(this.BattleWindowPanel);
+            this.BattlePanel.Location = new System.Drawing.Point(0, 0);
+            this.BattlePanel.Name = "BattlePanel";
+            this.BattlePanel.Size = new System.Drawing.Size(800, 600);
+            this.BattlePanel.TabIndex = 2;
+            this.BattlePanel.Visible = false;
+            // 
+            // BattleSpecialButton
+            // 
+            this.BattleSpecialButton.Location = new System.Drawing.Point(564, 474);
+            this.BattleSpecialButton.Name = "BattleSpecialButton";
+            this.BattleSpecialButton.Size = new System.Drawing.Size(112, 34);
+            this.BattleSpecialButton.TabIndex = 3;
+            this.BattleSpecialButton.Text = "SPECIAL";
+            this.BattleSpecialButton.UseVisualStyleBackColor = true;
+            this.BattleSpecialButton.Click += new System.EventHandler(this.BattleSpecialButton_Click);
+            // 
+            // BattleDefendButton
+            // 
+            this.BattleDefendButton.Location = new System.Drawing.Point(336, 474);
+            this.BattleDefendButton.Name = "BattleDefendButton";
+            this.BattleDefendButton.Size = new System.Drawing.Size(112, 34);
+            this.BattleDefendButton.TabIndex = 2;
+            this.BattleDefendButton.Text = "DEFEND";
+            this.BattleDefendButton.UseVisualStyleBackColor = true;
+            this.BattleDefendButton.Click += new System.EventHandler(this.BattleDefendButton_Click);
+            // 
+            // BattleAttackButton
+            // 
+            this.BattleAttackButton.Location = new System.Drawing.Point(112, 474);
+            this.BattleAttackButton.Name = "BattleAttackButton";
+            this.BattleAttackButton.Size = new System.Drawing.Size(112, 34);
+            this.BattleAttackButton.TabIndex = 1;
+            this.BattleAttackButton.Text = "ATTACK";
+            this.BattleAttackButton.UseVisualStyleBackColor = true;
+            this.BattleAttackButton.Click += new System.EventHandler(this.BattleAttackButton_Click);
+            // 
+            // BattleWindowPanel
+            // 
+            this.BattleWindowPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BattleWindowPanel.BackgroundImage")));
+            this.BattleWindowPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BattleWindowPanel.Controls.Add(this.BattleWindowPlayerEnergy);
+            this.BattleWindowPanel.Controls.Add(this.BattleWindowPELabel);
+            this.BattleWindowPanel.Controls.Add(this.BattleWindowPlayerHealth);
+            this.BattleWindowPanel.Controls.Add(this.BattleWindowPHLabel);
+            this.BattleWindowPanel.Controls.Add(this.BattleWindowEnemyHealth);
+            this.BattleWindowPanel.Controls.Add(this.BattleWindowEHLabel);
+            this.BattleWindowPanel.Controls.Add(this.BattleWindowEnemyPictureBox);
+            this.BattleWindowPanel.Controls.Add(this.pictureBox4);
+            this.BattleWindowPanel.Location = new System.Drawing.Point(42, 46);
+            this.BattleWindowPanel.Name = "BattleWindowPanel";
+            this.BattleWindowPanel.Size = new System.Drawing.Size(706, 378);
+            this.BattleWindowPanel.TabIndex = 0;
+            // 
+            // BattleWindowPlayerEnergy
+            // 
+            this.BattleWindowPlayerEnergy.AutoSize = true;
+            this.BattleWindowPlayerEnergy.BackColor = System.Drawing.Color.Transparent;
+            this.BattleWindowPlayerEnergy.Location = new System.Drawing.Point(134, 42);
+            this.BattleWindowPlayerEnergy.Name = "BattleWindowPlayerEnergy";
+            this.BattleWindowPlayerEnergy.Size = new System.Drawing.Size(42, 25);
+            this.BattleWindowPlayerEnergy.TabIndex = 7;
+            this.BattleWindowPlayerEnergy.Text = "000";
+            // 
+            // BattleWindowPELabel
+            // 
+            this.BattleWindowPELabel.AutoSize = true;
+            this.BattleWindowPELabel.BackColor = System.Drawing.Color.Transparent;
+            this.BattleWindowPELabel.Location = new System.Drawing.Point(9, 42);
+            this.BattleWindowPELabel.Name = "BattleWindowPELabel";
+            this.BattleWindowPELabel.Size = new System.Drawing.Size(122, 25);
+            this.BattleWindowPELabel.TabIndex = 6;
+            this.BattleWindowPELabel.Text = "Player Energy:";
+            // 
+            // BattleWindowPlayerHealth
+            // 
+            this.BattleWindowPlayerHealth.AutoSize = true;
+            this.BattleWindowPlayerHealth.BackColor = System.Drawing.Color.Transparent;
+            this.BattleWindowPlayerHealth.Location = new System.Drawing.Point(134, 11);
+            this.BattleWindowPlayerHealth.Name = "BattleWindowPlayerHealth";
+            this.BattleWindowPlayerHealth.Size = new System.Drawing.Size(42, 25);
+            this.BattleWindowPlayerHealth.TabIndex = 5;
+            this.BattleWindowPlayerHealth.Text = "000";
+            // 
+            // BattleWindowPHLabel
+            // 
+            this.BattleWindowPHLabel.AutoSize = true;
+            this.BattleWindowPHLabel.BackColor = System.Drawing.Color.Transparent;
+            this.BattleWindowPHLabel.Location = new System.Drawing.Point(9, 11);
+            this.BattleWindowPHLabel.Name = "BattleWindowPHLabel";
+            this.BattleWindowPHLabel.Size = new System.Drawing.Size(119, 25);
+            this.BattleWindowPHLabel.TabIndex = 4;
+            this.BattleWindowPHLabel.Text = "Player Health:";
+            // 
+            // BattleWindowEnemyHealth
+            // 
+            this.BattleWindowEnemyHealth.AutoSize = true;
+            this.BattleWindowEnemyHealth.BackColor = System.Drawing.Color.Transparent;
+            this.BattleWindowEnemyHealth.Location = new System.Drawing.Point(650, 11);
+            this.BattleWindowEnemyHealth.Name = "BattleWindowEnemyHealth";
+            this.BattleWindowEnemyHealth.Size = new System.Drawing.Size(42, 25);
+            this.BattleWindowEnemyHealth.TabIndex = 3;
+            this.BattleWindowEnemyHealth.Text = "000";
+            // 
+            // BattleWindowEHLabel
+            // 
+            this.BattleWindowEHLabel.AutoSize = true;
+            this.BattleWindowEHLabel.BackColor = System.Drawing.Color.Transparent;
+            this.BattleWindowEHLabel.Location = new System.Drawing.Point(519, 11);
+            this.BattleWindowEHLabel.Name = "BattleWindowEHLabel";
+            this.BattleWindowEHLabel.Size = new System.Drawing.Size(125, 25);
+            this.BattleWindowEHLabel.TabIndex = 2;
+            this.BattleWindowEHLabel.Text = "Enemy Health:";
+            // 
+            // BattleWindowEnemyPictureBox
+            // 
+            this.BattleWindowEnemyPictureBox.BackColor = System.Drawing.Color.Transparent;
+            this.BattleWindowEnemyPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BattleWindowEnemyPictureBox.Location = new System.Drawing.Point(522, 139);
+            this.BattleWindowEnemyPictureBox.Name = "BattleWindowEnemyPictureBox";
+            this.BattleWindowEnemyPictureBox.Size = new System.Drawing.Size(199, 293);
+            this.BattleWindowEnemyPictureBox.TabIndex = 1;
+            this.BattleWindowEnemyPictureBox.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.BackgroundImage")));
+            this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox4.Location = new System.Drawing.Point(9, 223);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(180, 183);
+            this.pictureBox4.TabIndex = 0;
+            this.pictureBox4.TabStop = false;
+            // 
+            // DiedPane
+            // 
+            this.DiedPane.BackColor = System.Drawing.Color.Black;
+            this.DiedPane.Controls.Add(this.label10);
+            this.DiedPane.Controls.Add(this.label9);
+            this.DiedPane.Location = new System.Drawing.Point(0, 0);
+            this.DiedPane.Name = "DiedPane";
+            this.DiedPane.Size = new System.Drawing.Size(800, 600);
+            this.DiedPane.TabIndex = 4;
+            this.DiedPane.Visible = false;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.BackColor = System.Drawing.Color.Transparent;
+            this.label10.Font = new System.Drawing.Font("Showcard Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.Location = new System.Drawing.Point(212, 312);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(394, 40);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "Better Luck Next Time";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.BackColor = System.Drawing.Color.Transparent;
+            this.label9.Font = new System.Drawing.Font("Showcard Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label9.ForeColor = System.Drawing.Color.White;
+            this.label9.Location = new System.Drawing.Point(318, 216);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(166, 40);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "You Died";
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 600);
-            this.Controls.Add(this.BattleFieldPanel);
+            this.Controls.Add(this.DiedPane);
+            this.Controls.Add(this.BattlePanel);
             this.Controls.Add(this.CharacterSelectorPanel);
             this.Controls.Add(this.TitleScreenInitialPanel);
             this.Controls.Add(this.IntroPanel1);
             this.Controls.Add(this.IntroPanel2);
             this.Controls.Add(this.IntroPanel3);
+            this.Controls.Add(this.BattleFieldPanel);
             this.KeyPreview = true;
             this.Name = "Game";
             this.Text = "MEGA DEATH MOUNTAIN";
@@ -415,6 +616,13 @@ namespace MegaDeathMountainShared
             this.IntroPanel2.PerformLayout();
             this.IntroPanel3.ResumeLayout(false);
             this.IntroPanel3.PerformLayout();
+            this.BattlePanel.ResumeLayout(false);
+            this.BattleWindowPanel.ResumeLayout(false);
+            this.BattleWindowPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BattleWindowEnemyPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            this.DiedPane.ResumeLayout(false);
+            this.DiedPane.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -447,6 +655,22 @@ namespace MegaDeathMountainShared
         public Panel BattleFieldPanel;
         public Panel BattleFieldCanvas;
         private Label label8;
+        public Panel BattlePanel;
+        private Button BattleSpecialButton;
+        private Button BattleDefendButton;
+        private Button BattleAttackButton;
+        private Panel BattleWindowPanel;
+        public PictureBox BattleWindowEnemyPictureBox;
+        private PictureBox pictureBox4;
+        public Label BattleWindowPlayerEnergy;
+        private Label BattleWindowPELabel;
+        public Label BattleWindowPlayerHealth;
+        private Label BattleWindowPHLabel;
+        public Label BattleWindowEnemyHealth;
+        private Label BattleWindowEHLabel;
+        public Panel DiedPane;
+        private Label label10;
+        private Label label9;
     }
 
 }

@@ -21,11 +21,20 @@ namespace MegaDeathMountain
     {
         public Knight(string name, ILogger logger) : base(name, 24, 20, 10, logger, PlayerClass.Knight) {  }
 
-        public override void specialAttack(IActor target)
+        public override string specialAttack(Actor target)
         {
-            UILineManager.PrintLine("The Knights Sword Glows With A Holy Light");
-            target.takeDamage(this.Attack * 3, " is engulfed in holy flame as the knights sword makes contact");
+            StringBuilder sb = new StringBuilder();
+            string m1 = "The Knights Sword Glows With A Holy Light";
+            string m2 = " is engulfed in holy flame as the knights sword makes contact";
+            sb.Append(m1);
+            sb.Append("\n");
+            sb.Append(target.Name + m2);
+            
+            UILineManager.PrintLine(m1);
+            target.takeDamage(this.Attack * 3, m2);
             Processor.Player.CurrentEnergy = 0;
+
+            return sb.ToString();
         }
     }
 }

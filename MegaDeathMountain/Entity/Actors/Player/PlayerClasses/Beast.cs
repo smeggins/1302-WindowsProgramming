@@ -21,17 +21,29 @@ namespace MegaDeathMountain
     {
         public Beast(string name, ILogger logger) : base(name, 12, 10, 15, logger, PlayerClass.Beast) {  }
 
-        public override void specialAttack(IActor target)
+        public override string specialAttack(Actor target)
         {
-            UILineManager.PrintLine("The beast leaps into the enemy, slicing wildly");
+            StringBuilder sb = new StringBuilder();
+            string m1 = "The beast leaps into the enemy, slicing wildly";
+            string m2 = " slashes in a FURY";
+            string m3 = " is covered in wounds from the vicious attack";
+            sb.Append(m1);
+            sb.Append("\n");
+            sb.Append(this.Name + m2);
+            sb.Append("\n");
+            sb.Append(target.Name + m3);
+
+            UILineManager.PrintLine(m1);
             this.Attack = Attack / 2;
             for (int i = 0; i < 3; i++)
             {
-                attack(target, " slashes in a FURY");
+                attack(target, m2);
             }
             this.Attack = Attack * 2;
-            target.takeDamage(this.Attack, " is covered in wounds from the vicious attack");
+            target.takeDamage(this.Attack, m3);
             Processor.Player.CurrentEnergy = Processor.Player.CurrentEnergy / 2;
+
+            return sb.ToString();
         }
     }
 }

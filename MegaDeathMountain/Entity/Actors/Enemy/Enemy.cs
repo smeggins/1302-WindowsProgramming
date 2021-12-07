@@ -18,37 +18,36 @@ namespace MegaDeathMountain
             Processor.WipeEnemyFromExistence(this);
         }
 
-        public override int attack(IActor target, string attackMessage)
+        public override string attack(Actor target, string attackMessage)
         {
+            string ReturnMessage;
             if (ChargingSpecialAttack == false)
             {
                 if (_RNG.Next(1, 10) > 3)
                 {
-                    UILineManager.PrintLine(Name + "Begins charging for a powerful attack");
+                    ReturnMessage = Name + "Begins charging for a powerful attack";
+                    UILineManager.PrintLine(ReturnMessage);
                     ChargingSpecialAttack = true;
-                    
-                    return 0;
                 }
                 else
                 {
                     UILineManager.PrintLine(Name + attackMessage);
+                    ReturnMessage = target.Name;
 
                     if (target.dodge(Attack) == false)
                     {
+                        ReturnMessage += Dialogue.Instance.getRandomMissMsg();
                         target.missAttack(Dialogue.Instance.getRandomMissMsg());
-                        
-                        return 0;
                     }
                     else
                     {
+                        ReturnMessage += Dialogue.Instance.getRandomHitMsg();
                         target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
                     }
-                    
-                    return Attack;
                 }
             }
             
-            return 0;
+            return attackMessage;
         }
 
         protected static int creationAttack(int playerLevel, int multiplier)

@@ -9,10 +9,10 @@ namespace MegaDeathMountain
     public interface IActor
     {
         public int CurrentHealth { get; set; }
-        public void takeDamage(int damage, string damageMessage);
+        public int takeDamage(int damage, string damageMessage);
         public void die(string deathMessage);
-        public int attack(IActor target, string attackMessage);
-        public void specialAttack(IActor target);
+        public string attack(Actor target, string attackMessage);
+        public string specialAttack(Actor target);
         public bool dodge(int attack);
         public void missAttack(string missMessage);
         public (ConsoleColor color, char symbol) LayoutGraphic();
@@ -63,34 +63,39 @@ namespace MegaDeathMountain
             this.LayoutGraphic = layoutGraphic;
         }
 
-        public abstract int attack(IActor target, string attackMessage);
+        public abstract string attack(Actor target, string attackMessage);
 
         public bool dodge(int attack)
         {
             int rn = _RNG.Next(1, 100);
             int ActiveDefence = (this.Defending) ? Defence * 2 : Defence;
+            bool dodgeSuccessCheck = false;
 
             if (attack != (this.Attack * 2))
             {
-                return (rn >= ActiveDefence) ? true : false;
+                dodgeSuccessCheck = (rn >= ActiveDefence) ? true : false;
             }
             else
             {
-                return (rn >= (ActiveDefence / 2)) ? true : false;
+                dodgeSuccessCheck = (rn >= (ActiveDefence / 2)) ? true : false;
             }
+
+            Defending = false;
+            return dodgeSuccessCheck;
         }
 
 
         public abstract void die(string deathMessage);
 
-        public abstract void specialAttack(IActor target);
+        public abstract string specialAttack(Actor target);
 
-        public virtual void takeDamage(int damage, string damageMessage)
+        public virtual int takeDamage(int damage, string damageMessage)
         {
             int damageTaken = _RNG.Next(damage - 3, damage + 2);
             UILineManager.PrintLine($"\n\n{Name}{damageMessage}");
             UILineManager.PrintLine($"{damageTaken} damage\n\n");
             this.CurrentHealth -= damageTaken;
+            return damageTaken;
         }
         public void missAttack(string missMessage)
         {

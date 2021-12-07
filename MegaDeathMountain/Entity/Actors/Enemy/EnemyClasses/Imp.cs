@@ -15,19 +15,22 @@ namespace MegaDeathMountain
             return EnemyImages.Instance.GetImp();
         }
 
-        public override void specialAttack(IActor target)
+        public override string specialAttack(Actor target)
         {
-            
+            string m1;
             if (target.dodge(Attack) == false)
             {
-                target.missAttack(Dialogue.Instance.getRandomMissMsg());
-                return;
+                m1 = Dialogue.Instance.getRandomMissMsg();
+                target.missAttack(m1);
             }
             else
             {
-                UILineManager.PrintLine($"\nThe Imp Sends a massive fireball towards you!");
+                m1 = "The Imp Sends a massive fireball towards you!";
+                UILineManager.PrintLine($"\n{m1}");
                 target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
             }
+
+            return m1;
         }
     }
 }

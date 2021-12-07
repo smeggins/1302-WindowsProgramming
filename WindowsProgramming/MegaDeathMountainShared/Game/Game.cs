@@ -42,6 +42,13 @@ namespace MegaDeathMountainShared
             panel.Visible = isVisible;
         }
 
+        public delegate void d_SetLabelValue(Label label, string Value);
+        public static d_SetLabelValue SetLabelValueDelegate = new d_SetLabelValue(SetLabelValue);
+        public static void SetLabelValue(Label label, string Value)
+        {
+            label.Text = Value;
+        }
+
         private void ChangeLook_Event(object sender, EventArgs e)
         {
             MessageBox.Show("waited 5 seconds broskie");
@@ -109,7 +116,7 @@ namespace MegaDeathMountainShared
             KnightSelectorImage.Refresh();
         }
 
-        private static (Color color, string imageLocation) ConvertConsoleSymbolToFormsGraphic(char symbol)
+        public static (Color color, string imageLocation) ConvertConsoleSymbolToFormsGraphic(char symbol)
         {
             //NOTE Was Originally going to keep the colored backgrounds but now I'm thinking i might leave them all transparent
             // If i decide to keep it i will remove the Color part of this tuple in the future
@@ -163,9 +170,9 @@ namespace MegaDeathMountainShared
             //newPB.Refresh();
         }
 
-        //public delegate void GridSquareUpdate();
-        //public static GridSquareUpdate GridSquareUpdateDelegate = new GridSquareUpdate(updateGridSquare);
-        public void updateGridSquare()
+        public delegate void GridSquareUpdate();
+        public static GridSquareUpdate GridSquareUpdateDelegate = new GridSquareUpdate(updateGridSquare);
+        public static void updateGridSquare()
         {
             for (int y = 0; y < Processor.Position.Layout.Length; y++)
             {
@@ -179,13 +186,31 @@ namespace MegaDeathMountainShared
                     }
                     else
                     {
-                        if (BattleFieldZones[x][y].ImageLocation != "")
-                        {
-                            BattleFieldZones[x][y].ImageLocation = "";
-                            BattleFieldZones[x][y].BackColor = Color.Transparent;
-                        }
+                        BattleFieldZones[x][y].ImageLocation = "";
                     }
                 }
+            }
+        }
+
+        private void BattleAttackButton_Click(object sender, EventArgs e)
+        {
+            FormBattle.UserSelection = FormBattle.BattleOptions.Attack;
+        }
+
+        private void BattleDefendButton_Click(object sender, EventArgs e)
+        {
+            FormBattle.UserSelection = FormBattle.BattleOptions.Defend;
+        }
+
+        private void BattleSpecialButton_Click(object sender, EventArgs e)
+        {
+            if (Processor.Player.CurrentEnergy >= 10)
+            {
+                FormBattle.UserSelection = FormBattle.BattleOptions.Special;
+            }
+            else
+            {
+                MessageBox.Show("You must have 10 energy to use your special!");
             }
         }
     }

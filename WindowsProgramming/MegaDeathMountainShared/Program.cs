@@ -20,9 +20,10 @@ namespace MegaDeathMountainShared
             Application.SetCompatibleTextRenderingDefault(false);
 
             Processor GameProcessor = new Processor(new FormsKeyLogger(), new WriteLogger());
-            GameController Game = new GameController();
+            
 
             Game GameCanvas = new Game();
+            GameController Game = new GameController(GameCanvas);
 
             Game.StartFormGame(GameCanvas, GameProcessor);
             Application.Run(GameCanvas);

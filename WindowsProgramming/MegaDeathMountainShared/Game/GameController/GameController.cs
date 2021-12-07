@@ -11,6 +11,12 @@ namespace MegaDeathMountainShared
 {
     public class GameController
     {
+        private static Game GameCanvas;
+        public GameController (Game game)
+        {
+            GameCanvas = game;
+        }
+
         private void TitleScreen(Game game)
         {
             KeyEvents.WaitForEnter();
@@ -37,17 +43,17 @@ namespace MegaDeathMountainShared
         {
             game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.IntroPanel1, true });
 
-            Thread.Sleep(2000);
+            Thread.Sleep(500);
 
             game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.IntroPanel2, true });
             game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.IntroPanel1, false });
 
-            Thread.Sleep(2000);
+            Thread.Sleep(500);
 
             game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.IntroPanel3, true });
             game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.IntroPanel2, false });
 
-            Thread.Sleep(3000);
+            Thread.Sleep(500);
 
             game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.IntroPanel3, false });
         }
@@ -63,22 +69,28 @@ namespace MegaDeathMountainShared
             }
         }
 
-        public static void DrawShowBoxIfMessageExists(string? message)
+        public static bool DrawShowBoxIfMessageExists(string? message)
         {
+            bool Exists = false;
             if (message is not null && message != "")
             {
                 MessageBox.Show(message);
+                Exists = true;
             }
+
+            return Exists;
         }
+
+        
 
         public static BattleField.Fight FormFightDelegate = new BattleField.Fight(FightTheFormEnemies);
         private static void FightTheFormEnemies(Player player, List<Actor> EnemiesFought)
         {
             if (EnemiesFought != null && EnemiesFought.Count != 0)
             {
-                foreach (var enemy in EnemiesFought)
+                foreach (Enemy enemy in EnemiesFought)
                 {
-                    // add new attack method here
+                    FormBattle.Battle(GameCanvas, enemy);
                 }
             }
         }
@@ -93,34 +105,45 @@ namespace MegaDeathMountainShared
 
             DrawFormsBattleField(game, Processor.Position.Layout);
 
-            string UtilityMessage;
+            string RescueMessage;
             bool FoughtEnemies = false;
 
             while (Processor.Enemies.Count > 0 && Processor.Player.CurrentHealth > 0)
             {
-
-                processor.BattleField.movePlayerOnBattleField();
-                game.updateGridSquare();
+                processor.BattleField.movePlayerOnBattleField(FormsKeyLogger.waitForKeys(new ConsoleKey[] { (ConsoleKey.UpArrow), (ConsoleKey.DownArrow), (ConsoleKey.LeftArrow), (ConsoleKey.RightArrow) }));
+                game.Invoke(Game.GridSquareUpdateDelegate);
 
                 // Rescue NPCS
-                UtilityMessage = processor.BattleField.RescueAdjacent(Processor.Player, Processor.NPCs);
-
-                DrawShowBoxIfMessageExists(UtilityMessage);
-                UtilityMessage = "";
-                    
-                game.updateGridSquare();
+                RescueMessage = processor.BattleField.RescueAdjacent(Processor.Player, Processor.NPCs);
+                DrawShowBoxIfMessageExists(RescueMessage);
 
                 // Fight Enemies
                 FoughtEnemies = processor.BattleField.FightAdjacent(FormFightDelegate, Processor.Player, Processor.Enemies);
+                
+                
+                if (FoughtEnemies || RescueMessage != "")
+                {
+                    game.Invoke(Game.GridSquareUpdateDelegate);
+                }
 
-                game.updateGridSquare();
 
+                List<string> CivDeathMessages = processor.BattleField.EnemyMovementOnBattleField();
+                bool fought = processor.BattleField.FightAdjacent(FormFightDelegate, Processor.Player, Processor.Enemies);
+                game.Invoke(Game.GridSquareUpdateDelegate);
 
-                //    EnemyMovementOnBattleField();
-                //    NPCMovementOnBattleField();
+                foreach (string deathMessage in CivDeathMessages)
+                {
+                    MessageBox.Show(deathMessage);
+                }
+                RescueMessage = "";
             }
 
-            //Processor.Position.ResetLayout();
+            Processor.Position.ResetLayout();
+        }
+
+        private void LevelUp()
+        {
+
         }
 
         public Task StartFormGame(Game game, Processor GameProcessor)
@@ -141,25 +164,25 @@ namespace MegaDeathMountainShared
 
                     await entitygen;
                     ManageBattlefield(GameProcessor, game);
-                        //GameProcessor.BattleField.Controller(Processor.Position.Layout);
 
-                    //    if (Processor.Player.CurrentHealth > 0)
-                    //    {
-                    //        UILineManager.PrintLine($"Congrats {Processor.Player.Name}, You survived another level of MEGA DEATH MOUNTAIN!");
-                    //        UILineManager.PrintLine($"\n{Processor.Player.Name} stats:");
-                    //        UILineManager.PrintLine($"Health: {Processor.Player.CurrentHealth}");
-                    //        UILineManager.PrintLine($"Energy: {Processor.Player.CurrentEnergy}");
-                    //        Processor.Player.makeCamp();
-                    //        UILineManager.waitForEnter();
-                    //        Processor.Player.level();
-                    //        UILineManager.waitForEnter();
-                    //    }
-                    //    else
-                    //    {
-                    //        UILineManager.PrintLine("You had a good run, maybe next time you'll conquer MEGA DEATH MOUNTAIN!");
-                    //        UILineManager.waitForEnter();
-                    //        break;
-                    //    }
+                    if (Processor.Player.CurrentHealth > 0)
+                    {
+                        //UILineManager.PrintLine($"Congrats {Processor.Player.Name}, You survived another level of MEGA DEATH MOUNTAIN!");
+                        //UILineManager.PrintLine($"\n{Processor.Player.Name} stats:");
+                        //UILineManager.PrintLine($"Health: {Processor.Player.CurrentHealth}");
+                        //UILineManager.PrintLine($"Energy: {Processor.Player.CurrentEnergy}");
+                        //Processor.Player.makeCamp();
+                        //UILineManager.waitForEnter();
+                        //Processor.Player.level();
+                        //UILineManager.waitForEnter();
+                    }
+                    else
+                    {
+                        game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.DiedPane, true });
+                        game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.BattleFieldPanel, false });
+                        UILineManager.waitForEnter();
+                        break;
+                    }
                     levels++;
                 }
 

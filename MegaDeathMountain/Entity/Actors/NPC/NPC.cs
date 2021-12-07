@@ -9,17 +9,16 @@ namespace MegaDeathMountain
     public class NPC : Actor
     {
         public NPC(ILogger logger) : base(NPCNames.Instance.getRandomName(), 0,0, logger, (ConsoleColor.Blue, '@')) {}
-        public override int attack(IActor target, string attackMessage)
+        public override string attack(Actor target, string attackMessage)
         {
             target.takeDamage(1, " barely notices the struggle of the villager");
-            return 0;
+            return "";
         }
 
         public override void die(string deathMessage = "A civilian has been killed!")
         {
             UILineManager.PrintLine(deathMessage);
             Processor.WipeNPCFromExistence(this);
-            UILineManager.waitForEnter();
         }
 
         public  void Rescued(string rescueMessage, int amountHealed = 15)
@@ -36,9 +35,12 @@ namespace MegaDeathMountain
         }
         
 
-        public override void specialAttack(IActor target)
+        public override string specialAttack(Actor target)
         {
-            target.takeDamage(100, " never expected the raw power just unleashed upon them");
+            string m1 = " never expected the raw power just unleashed upon them";
+            target.takeDamage(100, m1);
+
+            return target.Name + m1;
         }
     }
 }

@@ -37,19 +37,34 @@ namespace MegaDeathMountain
             UILineManager.PrintLine(this.Name + deathMessage);
         }
 
-        public override int attack(IActor target, string attackMessage)
+        public override string attack(Actor target, string attackMessage)
         {
             UILineManager.PrintLine(Name + attackMessage);
             if (target.dodge(Attack) == false)
             {
                 target.missAttack(Dialogue.Instance.getRandomMissMsg());
-                return 0;
+                return "";
             }
             else
             {
                 CurrentEnergy += EnergyRegainedPerHit;
                 target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
-                return Attack;
+                return "";
+            }
+        }
+
+        public string PlayerFormAttack(Actor target)
+        {
+            if (target.dodge(Attack) == false)
+            {
+                return target.Name + Dialogue.Instance.getRandomMissMsg();
+            }
+            else
+            {
+                CurrentEnergy += EnergyRegainedPerHit;
+                int Damage = target.takeDamage(Attack, Dialogue.Instance.getRandomHitMsg());
+                return $"{target.Name}{Dialogue.Instance.getRandomHitMsg()}\n" +
+                    $"You Dealt {Damage} Damage";
             }
         }
 

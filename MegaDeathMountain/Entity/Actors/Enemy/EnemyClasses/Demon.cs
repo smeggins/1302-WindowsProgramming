@@ -15,18 +15,22 @@ namespace MegaDeathMountain
             return EnemyImages.Instance.GetDemon();
         }
 
-        public override void specialAttack(IActor target)
+        public override string specialAttack(Actor target)
         {
+            string m1;
             if (target.dodge(Attack) == false)
             {
-                target.missAttack(Dialogue.Instance.getRandomMissMsg());
-                return;
+                m1 = Dialogue.Instance.getRandomMissMsg();
+                target.missAttack(m1);
             }
             else
             {
-                UILineManager.PrintLine("\nThe demon rears back, and begins an all out frenzied attack");
+                m1 = "The demon rears back, and begins an all out frenzied attack";
+                UILineManager.PrintLine($"\n{m1}");
                 target.takeDamage(this.Attack * 3, Dialogue.Instance.getRandomHitMsg());
             }
+
+            return m1;
         }
     }
 }

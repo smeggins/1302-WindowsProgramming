@@ -133,16 +133,20 @@ namespace MegaDeathMountain
         }
 
 
-        private void Murder(Enemy enemy, List<Actor> AdjacentNPCs)
+        private List<string> Murder(Enemy enemy, List<Actor> AdjacentNPCs)
         {
+            List<string> civDeathMessages = new List<string>();
             if (AdjacentNPCs != null && AdjacentNPCs.Count != 0)
             {
+                string DeathMessage;
                 foreach (NPC npc in AdjacentNPCs)
                 {
-                    npc.die($"{npc.Name} has been brutally murdered by a terrifying {enemy.Name}!");
+                    DeathMessage = $"{npc.Name} has been brutally murdered by a terrifying {enemy.Name}!";
+                    civDeathMessages.Add(DeathMessage);
+                    npc.die(DeathMessage);
                 }
-                BattleUI.DrawBattleField(Processor.Position.Layout);
             }
+            return civDeathMessages;
         }
 
         public bool FightAdjacent(Fight FightEnemies, Player player, List<Actor> enemies)
@@ -151,17 +155,24 @@ namespace MegaDeathMountain
 
             if (enemies.Count > 0)
             {
-                FightEnemies(player, AllAdjacentActors(player, enemies));
-                FoughtEnemies = true;
+                List<Actor> AdjacentActors = AllAdjacentActors(player, enemies);
+                FightEnemies(player, AdjacentActors);
+                if (AdjacentActors is not null && AdjacentActors.Count > 0)
+                {
+                    FoughtEnemies = true;
+                }
             }
 
             return FoughtEnemies;
         }
 
-        private void KillAdjacent(Enemy enemy, List<Actor> npcs)
+        private List<string> KillAdjacent(Enemy enemy, List<Actor> npcs)
         {
+            List<string> civDeathMessages = new List<string>();
             if (npcs.Count > 0)
-                Murder(enemy, AllAdjacentActors(enemy, npcs));
+                civDeathMessages = Murder(enemy, AllAdjacentActors(enemy, npcs));
+
+            return civDeathMessages;
         }
 
         private List<string> Rescue(List<Actor> NPCsRescued)
@@ -263,9 +274,8 @@ namespace MegaDeathMountain
             }
         }
 
-        public void movePlayerOnBattleField()
+        public void movePlayerOnBattleField(ConsoleKey key)
         {
-            ConsoleKey key = UILineManager.waitForKeys(new ConsoleKey[] { (ConsoleKey.UpArrow), (ConsoleKey.DownArrow), (ConsoleKey.LeftArrow), (ConsoleKey.RightArrow) });
             int X = Processor.Player.LayoutPosition.X;
             int Y = Processor.Player.LayoutPosition.Y;
             Logger.logDebugInformation($"BattleFieldController(): ConsoleKey key = UILineManager.waitForKeys = {key}");
@@ -357,15 +367,16 @@ namespace MegaDeathMountain
             }
         }
 
-        private void EnemyMovementOnBattleField()
-        {   
+        public List<string> EnemyMovementOnBattleField()
+        {
+            List<string> CivDeathMessages = new List<string>();
             foreach (Enemy enemy in Processor.Enemies)
             {
                 if (Processor.NPCs.Count > 0) 
                 {
                     Actor ClosestNPC = findNearestActorToActor(enemy, Processor.NPCs);
                     MoveActorTowardsClosestActor(enemy, ClosestNPC);
-                    KillAdjacent(enemy, new List<Actor>() { ClosestNPC });
+                    CivDeathMessages = KillAdjacent(enemy, Processor.NPCs);
                 }
                 else
                 {
@@ -373,7 +384,7 @@ namespace MegaDeathMountain
                 }
             }
 
-            FightAdjacent(FightDelegate, Processor.Player, Processor.Enemies);
+            return CivDeathMessages;
         }
 
         private void NPCMovementOnBattleField()
@@ -419,10 +430,12 @@ namespace MegaDeathMountain
             bool FoughtEnemies;
             while (Processor.Enemies.Count > 0 && Processor.Player.CurrentHealth > 0)
             {
-                
+                RescueMessage = "";
+                FoughtEnemies = false;
+
                 UILineManager.PrintLine("To move use your arrow keys");
 
-                movePlayerOnBattleField();
+                movePlayerOnBattleField(UILineManager.waitForKeys(new ConsoleKey[] { (ConsoleKey.UpArrow), (ConsoleKey.DownArrow), (ConsoleKey.LeftArrow), (ConsoleKey.RightArrow) }));
                 BattleUI.DrawBattleField(Processor.Position.Layout);
 
                 RescueMessage = RescueAdjacent(Processor.Player, Processor.NPCs);
@@ -430,14 +443,19 @@ namespace MegaDeathMountain
 
                 if (RescueMessage != "" || FoughtEnemies == true)
                 {
-                    Console.WriteLine($"rescue message: [{RescueMessage}], foght enemies: {FoughtEnemies}");
-                    UILineManager.waitForEnter();
                     BattleUI.DrawBattleField(Processor.Position.Layout);
                 }
 
-                EnemyMovementOnBattleField();
+                int CivsKilled = EnemyMovementOnBattleField().Count;
+                FoughtEnemies = FightAdjacent(FightDelegate, Processor.Player, Processor.Enemies);
+
+                if (CivsKilled > 0)
+                {
+                    UILineManager.waitForEnter();
+                }
                 BattleUI.DrawBattleField(Processor.Position.Layout);
                 //NPCMovementOnBattleField(); // Causing issues and was not a pre-req so going to leave this feature out for now
+                
             }
 
             Processor.Position.ResetLayout();
