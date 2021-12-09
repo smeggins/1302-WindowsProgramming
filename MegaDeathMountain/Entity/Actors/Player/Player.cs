@@ -167,6 +167,25 @@ namespace MegaDeathMountain
             UILineManager.DrawMenuLine();
         }
 
-        
+        public int FormLevel()
+        {
+            this.Level += 1;
+            int returnValue;
+
+            if (Level % 2 == 0 || Level % 3 == 0)
+            {
+                returnValue = 10;
+                TotalHealth += returnValue;
+                CurrentHealth += returnValue;
+            }
+            else
+            {
+                returnValue = 1;
+                Defence += returnValue;
+            }
+            return returnValue;
+        }
+
+
     }
 }

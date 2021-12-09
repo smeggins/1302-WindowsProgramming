@@ -74,6 +74,24 @@ namespace MegaDeathMountainShared
             this.DiedPane = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.EndOfLevelPane = new System.Windows.Forms.Panel();
+            this.EndOfLevelMakeCampNoButton = new System.Windows.Forms.Button();
+            this.EndOfLevelMakeCampYesButton = new System.Windows.Forms.Button();
+            this.label18 = new System.Windows.Forms.Label();
+            this.EndOfLevelHealthPlus = new System.Windows.Forms.Label();
+            this.EndOfLevelHealthIncreaseAmount = new System.Windows.Forms.Label();
+            this.EndOfLevelDefenceIncreaseAmount = new System.Windows.Forms.Label();
+            this.EndOfLevelDefencePlus = new System.Windows.Forms.Label();
+            this.EndOfLevelDefence = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.EndOfLevelHealth = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.EndOfLevelEnergy = new System.Windows.Forms.Label();
+            this.EndOfLevelPlayerLevel = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.TitleScreenInitialPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -91,6 +109,7 @@ namespace MegaDeathMountainShared
             ((System.ComponentModel.ISupportInitialize)(this.BattleWindowEnemyPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.DiedPane.SuspendLayout();
+            this.EndOfLevelPane.SuspendLayout();
             this.SuspendLayout();
             // 
             // TitleScreenInitialPanel
@@ -582,11 +601,244 @@ namespace MegaDeathMountainShared
             this.label9.TabIndex = 0;
             this.label9.Text = "You Died";
             // 
+            // EndOfLevelPane
+            // 
+            this.EndOfLevelPane.BackColor = System.Drawing.Color.Black;
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelMakeCampNoButton);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelMakeCampYesButton);
+            this.EndOfLevelPane.Controls.Add(this.label18);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelHealthPlus);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelHealthIncreaseAmount);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelDefenceIncreaseAmount);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelDefencePlus);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelDefence);
+            this.EndOfLevelPane.Controls.Add(this.label14);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelHealth);
+            this.EndOfLevelPane.Controls.Add(this.label16);
+            this.EndOfLevelPane.Controls.Add(this.label15);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelEnergy);
+            this.EndOfLevelPane.Controls.Add(this.EndOfLevelPlayerLevel);
+            this.EndOfLevelPane.Controls.Add(this.label13);
+            this.EndOfLevelPane.Controls.Add(this.label12);
+            this.EndOfLevelPane.Controls.Add(this.label11);
+            this.EndOfLevelPane.Location = new System.Drawing.Point(0, 0);
+            this.EndOfLevelPane.Name = "EndOfLevelPane";
+            this.EndOfLevelPane.Size = new System.Drawing.Size(800, 600);
+            this.EndOfLevelPane.TabIndex = 2;
+            this.EndOfLevelPane.Visible = false;
+            // 
+            // EndOfLevelMakeCampNoButton
+            // 
+            this.EndOfLevelMakeCampNoButton.Location = new System.Drawing.Point(418, 532);
+            this.EndOfLevelMakeCampNoButton.Name = "EndOfLevelMakeCampNoButton";
+            this.EndOfLevelMakeCampNoButton.Size = new System.Drawing.Size(112, 34);
+            this.EndOfLevelMakeCampNoButton.TabIndex = 18;
+            this.EndOfLevelMakeCampNoButton.Text = "No";
+            this.EndOfLevelMakeCampNoButton.UseVisualStyleBackColor = true;
+            this.EndOfLevelMakeCampNoButton.Click += new System.EventHandler(this.EndOfLevelMakeCampNoButton_Click);
+            // 
+            // EndOfLevelMakeCampYesButton
+            // 
+            this.EndOfLevelMakeCampYesButton.Location = new System.Drawing.Point(242, 532);
+            this.EndOfLevelMakeCampYesButton.Name = "EndOfLevelMakeCampYesButton";
+            this.EndOfLevelMakeCampYesButton.Size = new System.Drawing.Size(112, 34);
+            this.EndOfLevelMakeCampYesButton.TabIndex = 17;
+            this.EndOfLevelMakeCampYesButton.Text = "Yes";
+            this.EndOfLevelMakeCampYesButton.UseVisualStyleBackColor = true;
+            this.EndOfLevelMakeCampYesButton.Click += new System.EventHandler(this.EndOfLevelMakeCampYesButton_Click);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.BackColor = System.Drawing.Color.Transparent;
+            this.label18.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label18.ForeColor = System.Drawing.Color.Gold;
+            this.label18.Location = new System.Drawing.Point(242, 461);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(304, 41);
+            this.label18.TabIndex = 16;
+            this.label18.Text = "Will You Make Camp?";
+            // 
+            // EndOfLevelHealthPlus
+            // 
+            this.EndOfLevelHealthPlus.AutoSize = true;
+            this.EndOfLevelHealthPlus.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelHealthPlus.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelHealthPlus.ForeColor = System.Drawing.Color.Yellow;
+            this.EndOfLevelHealthPlus.Location = new System.Drawing.Point(519, 320);
+            this.EndOfLevelHealthPlus.Name = "EndOfLevelHealthPlus";
+            this.EndOfLevelHealthPlus.Size = new System.Drawing.Size(39, 41);
+            this.EndOfLevelHealthPlus.TabIndex = 14;
+            this.EndOfLevelHealthPlus.Text = "+";
+            this.EndOfLevelHealthPlus.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            // 
+            // EndOfLevelHealthIncreaseAmount
+            // 
+            this.EndOfLevelHealthIncreaseAmount.AutoSize = true;
+            this.EndOfLevelHealthIncreaseAmount.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelHealthIncreaseAmount.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelHealthIncreaseAmount.ForeColor = System.Drawing.Color.White;
+            this.EndOfLevelHealthIncreaseAmount.Location = new System.Drawing.Point(552, 321);
+            this.EndOfLevelHealthIncreaseAmount.Name = "EndOfLevelHealthIncreaseAmount";
+            this.EndOfLevelHealthIncreaseAmount.Size = new System.Drawing.Size(34, 41);
+            this.EndOfLevelHealthIncreaseAmount.TabIndex = 13;
+            this.EndOfLevelHealthIncreaseAmount.Text = "0";
+            // 
+            // EndOfLevelDefenceIncreaseAmount
+            // 
+            this.EndOfLevelDefenceIncreaseAmount.AutoSize = true;
+            this.EndOfLevelDefenceIncreaseAmount.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelDefenceIncreaseAmount.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelDefenceIncreaseAmount.ForeColor = System.Drawing.Color.White;
+            this.EndOfLevelDefenceIncreaseAmount.Location = new System.Drawing.Point(552, 270);
+            this.EndOfLevelDefenceIncreaseAmount.Name = "EndOfLevelDefenceIncreaseAmount";
+            this.EndOfLevelDefenceIncreaseAmount.Size = new System.Drawing.Size(34, 41);
+            this.EndOfLevelDefenceIncreaseAmount.TabIndex = 11;
+            this.EndOfLevelDefenceIncreaseAmount.Text = "0";
+            // 
+            // EndOfLevelDefencePlus
+            // 
+            this.EndOfLevelDefencePlus.AutoSize = true;
+            this.EndOfLevelDefencePlus.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelDefencePlus.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelDefencePlus.ForeColor = System.Drawing.Color.Yellow;
+            this.EndOfLevelDefencePlus.Location = new System.Drawing.Point(519, 269);
+            this.EndOfLevelDefencePlus.Name = "EndOfLevelDefencePlus";
+            this.EndOfLevelDefencePlus.Size = new System.Drawing.Size(39, 41);
+            this.EndOfLevelDefencePlus.TabIndex = 10;
+            this.EndOfLevelDefencePlus.Text = "+";
+            this.EndOfLevelDefencePlus.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            // 
+            // EndOfLevelDefence
+            // 
+            this.EndOfLevelDefence.AutoSize = true;
+            this.EndOfLevelDefence.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelDefence.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelDefence.ForeColor = System.Drawing.Color.White;
+            this.EndOfLevelDefence.Location = new System.Drawing.Point(394, 270);
+            this.EndOfLevelDefence.Name = "EndOfLevelDefence";
+            this.EndOfLevelDefence.Size = new System.Drawing.Size(34, 41);
+            this.EndOfLevelDefence.TabIndex = 9;
+            this.EndOfLevelDefence.Text = "0";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.BackColor = System.Drawing.Color.Transparent;
+            this.label14.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(217, 270);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(127, 41);
+            this.label14.TabIndex = 8;
+            this.label14.Text = "Defence";
+            // 
+            // EndOfLevelHealth
+            // 
+            this.EndOfLevelHealth.AutoSize = true;
+            this.EndOfLevelHealth.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelHealth.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelHealth.ForeColor = System.Drawing.Color.White;
+            this.EndOfLevelHealth.Location = new System.Drawing.Point(394, 321);
+            this.EndOfLevelHealth.Name = "EndOfLevelHealth";
+            this.EndOfLevelHealth.Size = new System.Drawing.Size(62, 41);
+            this.EndOfLevelHealth.TabIndex = 7;
+            this.EndOfLevelHealth.Text = "0/0";
+            this.EndOfLevelHealth.Click += new System.EventHandler(this.EndOfLevelHealth_Click);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.BackColor = System.Drawing.Color.Transparent;
+            this.label16.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label16.ForeColor = System.Drawing.Color.White;
+            this.label16.Location = new System.Drawing.Point(217, 321);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(104, 41);
+            this.label16.TabIndex = 6;
+            this.label16.Text = "Health";
+            this.label16.Click += new System.EventHandler(this.label16_Click);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.BackColor = System.Drawing.Color.Transparent;
+            this.label15.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(217, 375);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(109, 41);
+            this.label15.TabIndex = 5;
+            this.label15.Text = "Energy";
+            // 
+            // EndOfLevelEnergy
+            // 
+            this.EndOfLevelEnergy.AutoSize = true;
+            this.EndOfLevelEnergy.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelEnergy.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelEnergy.ForeColor = System.Drawing.Color.White;
+            this.EndOfLevelEnergy.Location = new System.Drawing.Point(394, 375);
+            this.EndOfLevelEnergy.Name = "EndOfLevelEnergy";
+            this.EndOfLevelEnergy.Size = new System.Drawing.Size(62, 41);
+            this.EndOfLevelEnergy.TabIndex = 4;
+            this.EndOfLevelEnergy.Text = "0/0";
+            this.EndOfLevelEnergy.Click += new System.EventHandler(this.label14_Click);
+            // 
+            // EndOfLevelPlayerLevel
+            // 
+            this.EndOfLevelPlayerLevel.AutoSize = true;
+            this.EndOfLevelPlayerLevel.BackColor = System.Drawing.Color.Transparent;
+            this.EndOfLevelPlayerLevel.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.EndOfLevelPlayerLevel.ForeColor = System.Drawing.Color.White;
+            this.EndOfLevelPlayerLevel.Location = new System.Drawing.Point(394, 216);
+            this.EndOfLevelPlayerLevel.Name = "EndOfLevelPlayerLevel";
+            this.EndOfLevelPlayerLevel.Size = new System.Drawing.Size(34, 41);
+            this.EndOfLevelPlayerLevel.TabIndex = 3;
+            this.EndOfLevelPlayerLevel.Text = "0";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.BackColor = System.Drawing.Color.Transparent;
+            this.label13.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(217, 216);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(85, 41);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Level";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.BackColor = System.Drawing.Color.Transparent;
+            this.label12.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.Location = new System.Drawing.Point(112, 132);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(559, 41);
+            this.label12.TabIndex = 1;
+            this.label12.Text = "You Have Learned Much From This Battle";
+            this.label12.Click += new System.EventHandler(this.label12_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.Color.Transparent;
+            this.label11.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(50, 63);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(698, 41);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "As the Last Creature Falls A Bell Tolls in the Distance";
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 600);
+            this.Controls.Add(this.EndOfLevelPane);
             this.Controls.Add(this.DiedPane);
             this.Controls.Add(this.BattlePanel);
             this.Controls.Add(this.CharacterSelectorPanel);
@@ -623,6 +875,8 @@ namespace MegaDeathMountainShared
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.DiedPane.ResumeLayout(false);
             this.DiedPane.PerformLayout();
+            this.EndOfLevelPane.ResumeLayout(false);
+            this.EndOfLevelPane.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -671,6 +925,24 @@ namespace MegaDeathMountainShared
         public Panel DiedPane;
         private Label label10;
         private Label label9;
+        public Panel EndOfLevelPane;
+        private Label label13;
+        private Label label12;
+        private Label label11;
+        public Label EndOfLevelPlayerLevel;
+        private Label label16;
+        private Label label15;
+        public Label EndOfLevelEnergy;
+        private Button EndOfLevelMakeCampNoButton;
+        private Button EndOfLevelMakeCampYesButton;
+        private Label label18;
+        public Label EndOfLevelHealthPlus;
+        public Label EndOfLevelHealthIncreaseAmount;
+        public Label EndOfLevelDefenceIncreaseAmount;
+        public Label EndOfLevelDefencePlus;
+        public Label EndOfLevelDefence;
+        private Label label14;
+        public Label EndOfLevelHealth;
     }
 
 }

@@ -12,6 +12,7 @@ namespace MegaDeathMountainShared
     public class GameController
     {
         private static Game GameCanvas;
+        public static bool waiting = false;
         public GameController (Game game)
         {
             GameCanvas = game;
@@ -103,7 +104,19 @@ namespace MegaDeathMountainShared
             processor.BattleField.RandomlyAssignActorPosition(Processor.Enemies, Processor.Position.Layout);
             processor.BattleField.RandomlyAssignActorPosition(Processor.NPCs, Processor.Position.Layout);
 
-            DrawFormsBattleField(game, Processor.Position.Layout);
+            if (Game.BattleFieldZones is not null && Game.BattleFieldZones.Length != 0)
+            {
+                game.Invoke(Game.GridSquareUpdateDelegate);
+            }
+            else
+            {
+                Game.BattleFieldZones = new PictureBox[Processor.Position.Layout.Length][];
+                for (int i = 0; i < Game.BattleFieldZones.Length; i++)
+                {
+                    Game.BattleFieldZones[i] = new PictureBox[Processor.Position.Layout[0].Length];
+                }
+                DrawFormsBattleField(game, Processor.Position.Layout);
+            }
 
             string RescueMessage;
             bool FoughtEnemies = false;
@@ -139,11 +152,35 @@ namespace MegaDeathMountainShared
             }
 
             Processor.Position.ResetLayout();
+            game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.BattleFieldPanel, false });
         }
 
-        private void LevelUp()
+        private void EndLevel(Game game)
         {
+            waiting = true;
+            int statIncrease = Processor.Player.FormLevel();
+            game.Invoke(Game.SetLabelValueDelegate, new object[] { game.EndOfLevelPlayerLevel, Processor.Player.Level.ToString()});
+            game.Invoke(Game.SetLabelValueDelegate, new object[] { game.EndOfLevelDefence, Processor.Player.Defence.ToString() });
+            game.Invoke(Game.SetLabelValueDelegate, new object[] { game.EndOfLevelEnergy, $"{Processor.Player.CurrentEnergy}/{Processor.Player.TotalEnergy}" });
+            game.Invoke(Game.SetLabelValueDelegate, new object[] { game.EndOfLevelHealth, $"{Processor.Player.CurrentHealth}/{Processor.Player.TotalHealth}" });
 
+            if (Processor.Player.Level % 2 == 0 || Processor.Player.Level % 3 == 0)
+            {
+                game.Invoke(Game.SetLabelValueDelegate, new object[] { game.EndOfLevelHealthIncreaseAmount, statIncrease.ToString() });
+
+                game.Invoke(Game.SetLabelVisibilityDelegate, new object[] { game.EndOfLevelHealthPlus, true });
+                game.Invoke(Game.SetLabelVisibilityDelegate, new object[] { game.EndOfLevelHealthIncreaseAmount, true });
+            }
+            else
+            {
+                game.Invoke(Game.SetLabelValueDelegate, new object[] { game.EndOfLevelDefenceIncreaseAmount, statIncrease.ToString() });
+
+                game.Invoke(Game.SetLabelVisibilityDelegate, new object[] { game.EndOfLevelDefenceIncreaseAmount, true });
+                game.Invoke(Game.SetLabelVisibilityDelegate, new object[] { game.EndOfLevelDefencePlus, true });
+            }
+
+            game.Invoke(Game.PanelVisibilityDelegate, new object[] { game.EndOfLevelPane, true });
+            while (waiting == true) ;
         }
 
         public Task StartFormGame(Game game, Processor GameProcessor)
@@ -154,7 +191,7 @@ namespace MegaDeathMountainShared
                 TitleScreen(game);
                 CharacterCreationScreen(game, GameProcessor.Logger);
                 Intro(game);
-                GameProcessor.cheat(Processor.Player, "p");
+                GameProcessor.cheat("p");
 
                 int levels = 0;
 
@@ -167,6 +204,7 @@ namespace MegaDeathMountainShared
 
                     if (Processor.Player.CurrentHealth > 0)
                     {
+                        EndLevel(game);
                         //UILineManager.PrintLine($"Congrats {Processor.Player.Name}, You survived another level of MEGA DEATH MOUNTAIN!");
                         //UILineManager.PrintLine($"\n{Processor.Player.Name} stats:");
                         //UILineManager.PrintLine($"Health: {Processor.Player.CurrentHealth}");
@@ -185,9 +223,6 @@ namespace MegaDeathMountainShared
                     }
                     levels++;
                 }
-
-                //UILineManager.ClearScreen();
-                //UILineManager.PrintLine("Thanks for playing");
             });
         }
 

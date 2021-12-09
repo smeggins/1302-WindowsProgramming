@@ -15,7 +15,7 @@ namespace MegaDeathMountainShared
 
         public void Game_KeyDown(object sender, KeyEventArgs e)
         {
-            //MessageBox.Show($"in keydown: {e.KeyCode}");
+            //MessageBox.Show($"in keydown: {e.KeyCode}");]/]/
             KeyEvents.ExitGameCheck(ConvertKey(e.KeyCode));
             UpdateKeyAsync(ConvertKey(e.KeyCode));
         }
@@ -26,6 +26,8 @@ namespace MegaDeathMountainShared
             {
                 case Keys.Enter:
                     return ConsoleKey.Enter;
+                case Keys.Space:
+                    return ConsoleKey.Spacebar;
                 case Keys.Escape:
                     return ConsoleKey.Escape;
                 case Keys.Up:

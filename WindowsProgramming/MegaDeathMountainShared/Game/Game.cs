@@ -13,16 +13,11 @@ namespace MegaDeathMountainShared
 {
     public partial class Game : Form
     {
-        private static PictureBox[][] BattleFieldZones;
+        public static PictureBox[][] BattleFieldZones;
 
         public Game()
         {
             InitializeComponent();
-            BattleFieldZones = new PictureBox[Processor.Position.Layout.Length][];
-            for (int i = 0; i < BattleFieldZones.Length; i++)
-            {
-                BattleFieldZones[i] = new PictureBox[Processor.Position.Layout[0].Length];
-            }
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -47,6 +42,13 @@ namespace MegaDeathMountainShared
         public static void SetLabelValue(Label label, string Value)
         {
             label.Text = Value;
+        }
+
+        public delegate void d_SetLabelVisibility(Label label, bool isVisible);
+        public static d_SetLabelVisibility SetLabelVisibilityDelegate = new d_SetLabelVisibility(SetLabelVisibility);
+        public static void SetLabelVisibility(Label label, bool isVisible)
+        {
+            label.Visible = isVisible;
         }
 
         private void ChangeLook_Event(object sender, EventArgs e)
@@ -167,7 +169,6 @@ namespace MegaDeathMountainShared
                 newPB.ImageLocation = FormGraphic.imageLocation;
             }
             BattleFieldZones[position.x][position.y] = (newPB);
-            //newPB.Refresh();
         }
 
         public delegate void GridSquareUpdate();
@@ -213,5 +214,62 @@ namespace MegaDeathMountainShared
                 MessageBox.Show("You must have 10 energy to use your special!");
             }
         }
+
+        private void HideEndLevelStatLabels()
+        {
+            EndOfLevelDefenceIncreaseAmount.Visible = false;
+            EndOfLevelDefencePlus.Visible = false;
+            EndOfLevelHealthPlus.Visible = false;
+            EndOfLevelHealthIncreaseAmount.Visible = false;
+        }
+
+        private void EndOfLevelMakeCampYesButton_Click(object sender, EventArgs e)
+        {
+            int HPGain = Randomizer.Instance.RandomNumber(((int)(Processor.Player.CurrentHealth * 0.1f)), (Processor.Player.TotalHealth - Processor.Player.CurrentHealth));
+            int EnergyLoss = Randomizer.Instance.RandomNumber((int)Processor.Player.CurrentEnergy);
+
+
+            Processor.Player.CurrentHealth += HPGain;
+            Processor.Player.CurrentEnergy -= EnergyLoss;
+            MessageBox.Show($"Gained {HPGain} Health!\n" +
+                            $"Lost {EnergyLoss} Energy...\n" +
+                            $"New Total Health {Processor.Player.CurrentHealth}\n" +
+                            $"New Total Energy {Processor.Player.CurrentEnergy}");
+            HideEndLevelStatLabels();
+            EndOfLevelPane.Visible = false;
+            GameController.waiting = false;
+        }
+
+        private void EndOfLevelMakeCampNoButton_Click(object sender, EventArgs e)
+        {
+            EndOfLevelPane.Visible = false;
+            HideEndLevelStatLabels();
+            GameController.waiting = false;
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label14_Click(object sender, EventArgs e)
+        {
+
+        }
+        
+
+        private void EndOfLevelHealth_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label16_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        
+
+        
     }
 }

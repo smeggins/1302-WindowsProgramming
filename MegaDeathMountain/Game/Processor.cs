@@ -70,13 +70,13 @@ namespace MegaDeathMountain
             // Brutal ;)
         }
 
-        public void cheat(Player player, string cheatkey)
+        public void cheat(string cheatkey)
         {
-            if(player.Name == cheatkey)
+            if(Processor.Player.Name == cheatkey)
             {
-                player.Attack = 1000;
-                player.TotalHealth = 1000;
-                player.CurrentHealth = player.TotalHealth;
+                Processor.Player.Attack = 1000;
+               Processor.Player.TotalHealth = 1000;
+               Processor.Player.CurrentHealth =Processor.Player.TotalHealth;
             }
         }
 
@@ -171,7 +171,7 @@ namespace MegaDeathMountain
         {
             keyLogger.UpdateKeyAsync();
             
-            CreateCharacter(); cheat(Player, "p");
+            CreateCharacter(); cheat("p");
 
             UILineManager.ClearScreen();
             UILineManager.PrintLine("You arrive in the desolate, uforgiving mega death mountain." +
