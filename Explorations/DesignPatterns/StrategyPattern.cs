@@ -13,7 +13,7 @@ namespace Explorations.DesignPatterns
         Business,
         BusinessElite
     }
-    public class Customer
+    public class StrategyCustomer
     {
         public int yearJoined;
         public customerType type;
@@ -26,7 +26,7 @@ namespace Explorations.DesignPatterns
         {
             this.interestCalculator = interestCalculator;
         }
-        public float interestRate(Customer customer)
+        public float interestRate(StrategyCustomer customer)
         {
             return interestCalculator.calculateInterest(customer);
         }
@@ -34,7 +34,7 @@ namespace Explorations.DesignPatterns
 
     public interface IInterestCalculator
     {
-        public float calculateInterest(Customer customer);
+        public float calculateInterest(StrategyCustomer customer);
     }
     
 }

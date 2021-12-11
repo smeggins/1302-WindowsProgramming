@@ -6,7 +6,7 @@ namespace Explorations
     {
         static void Main(string[] args)
         {
-            Logger.test();
+            //Reflection.Test(); 
         }
     }
 }

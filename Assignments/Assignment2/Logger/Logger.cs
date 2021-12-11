@@ -10,6 +10,29 @@ public interface ILogger
     void logException(string message, Exception exception);
 }
 
+public abstract class Logger : ILogger
+{
+    public void logError(string message)
+    {
+        var msg = String.Format("Log Error: {0}", message);
+        write(msg);
+    }
+
+    public void logException(string message, Exception exception)
+    {
+        var msg = String.Format("Exception Logged: {0} {1}", message, exception);
+        write(msg);
+    }
+
+    public void logInformation(string message)
+    {
+        var msg = String.Format("Log Information: {0}", message);
+        write(msg);
+    }
+
+    protected virtual void write(string message) {}
+}
+
 public class WriteLogger : ILogger
 {
     string rootPath = "Logs/";
