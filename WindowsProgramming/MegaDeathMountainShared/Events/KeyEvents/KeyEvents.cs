@@ -12,7 +12,7 @@ namespace MegaDeathMountainShared
     {
         public static bool EnterCheck()
         {
-            return Processor.keyLogger.Key == ConsoleKey.Spacebar;
+            return Processor.keyLogger.Key == ConsoleKey.Enter;
         }
 
         public static void WaitForEnter()
