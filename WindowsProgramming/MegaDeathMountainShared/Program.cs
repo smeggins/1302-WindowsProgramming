@@ -27,20 +27,6 @@ namespace MegaDeathMountainShared
 
             Game.StartFormGame(GameCanvas, GameProcessor);
             Application.Run(GameCanvas);
-
-            
-
-            //System.Threading.Thread.Sleep(5000);
-            //var alert = new Alert("ding dang you waited 5 whole fucking seconds");
-            //alert.Show();
-
-            //GameCanvas.InitializeComponent2();
-
-
-            //ILogger logger = new WriteLogger();
-
-            //MegaDeathMountain.Processor game = new MegaDeathMountain.Processor();
-            //await GameCanvas.StartFormGame(logger, game);
         }
 
 
